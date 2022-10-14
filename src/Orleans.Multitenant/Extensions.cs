@@ -238,6 +238,12 @@ public static class AddressableExtensions
 
 public static class StreamIdExtensions
 {
+    /// <summary>Get the tenant id part of the <see cref="StreamId"/> key</summary>
+    /// <param name="streamId">This stream id</param>
+    /// <returns>The tenant id</returns>
+    public static string? GetTenantId(this StreamId streamId)
+    => streamId.Key.Span.TenantIdString();
+
     /// <summary>Get the part of the <see cref="StreamId"/> key that identifies it within it's tenant</summary>
     /// <param name="streamId">This stream id</param>
     /// <returns>The key within the tenant. This corresponds to the keyWithinTenant parameter of <see cref="TenantGrainFactory.GetGrain(Type, string)"/></returns>

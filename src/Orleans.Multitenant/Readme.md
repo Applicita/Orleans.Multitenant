@@ -1,4 +1,4 @@
-﻿Secure, flexible tenant separation for Microsoft Orleans 4
+﻿Secure, flexible tenant separation for [Microsoft Orleans 4](https://github.com/dotnet/orleans/releases/tag/v4.0.0-preview2)
 
 Docs: see the [repo readme](https://github.com/Applicita/Orleans.Multitenant#readme) and the inline C# documentation. All public Orleans.Multitenant API's come with full inline documentation.
 

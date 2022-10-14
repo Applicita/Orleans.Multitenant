@@ -10,15 +10,19 @@ string? tableStorageConnectionString = builder.Configuration["Azure:TableStorage
 
 builder.Host.UseOrleans((_, silo) => silo
     .UseLocalhostClustering()
+
     .AddMultitenantGrainStorageAsDefault<AzureTableGrainStorage, AzureTableStorageOptions, AzureTableGrainStorageOptionsValidator>(
             (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
                 options.ConfigureTableServiceClient(tableStorageConnectionString)),
-                // Called during silo startup, to ensure that any common dependencies needed for tenant-specific provider instances are initialized
+                // Called during silo startup, to ensure that any common dependencies
+                // needed for tenant-specific provider instances are initialized
 
             configureTenantOptions: (options, tenantId) => {
                 options.ConfigureTableServiceClient(tableStorageConnectionString);
                 options.TableName = $"OrleansGrainState{tenantId}";
-            }   // Called on the first grain state access for a tenant in a silo, to initialize the options for the tenant-specific provider instance just before it is instantiated
+            }   // Called on the first grain state access for a tenant in a silo,
+                // to initialize the options for the tenant-specific provider instance
+                // just before it is instantiated
         )
 );
 
