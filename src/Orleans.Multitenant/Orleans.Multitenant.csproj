@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="4.0.0-preview2" />
+		<PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
+		<PackageReference Include="Microsoft.Orleans.Streaming" Version="4.0.0-preview2" />
+	</ItemGroup>
+
+</Project>
