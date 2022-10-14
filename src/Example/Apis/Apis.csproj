@@ -18,11 +18,11 @@
     <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="4.0.0-preview2" />
     <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="4.0.0-preview2" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
+    <PackageReference Include="Orleans.Multitenant" Version="1.0.0-preview.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Orleans.Multitenant\Orleans.Multitenant.csproj" />
     <ProjectReference Include="..\Services.Tenant\Services.Tenant.csproj" />
   </ItemGroup>
 

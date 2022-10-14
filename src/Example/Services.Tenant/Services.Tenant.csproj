@@ -14,10 +14,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
+    <PackageReference Include="Orleans.Multitenant" Version="1.0.0-preview.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Orleans.Multitenant\Orleans.Multitenant.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 

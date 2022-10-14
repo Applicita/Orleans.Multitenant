@@ -213,7 +213,6 @@ public static class GrainFactoryExtensions
 
     /// <summary>Get a tenant-specific grain factory from outside an <see cref="IAddressable"/> (e.g. in a <see cref="IClusterClient"/>), for a specified tenant</summary>
     /// <param name="factory">A regular (tenant-unaware) grain factory</param>
-    /// <param name="grain">This tenant specific grain</param>
     /// <param name="tenantId">The factory tenant</param>
     /// <returns>The <see cref="TenantGrainFactory"/></returns>
     public static TenantGrainFactory ForTenant(this IGrainFactory factory, string tenantId) => new(factory, tenantId);
