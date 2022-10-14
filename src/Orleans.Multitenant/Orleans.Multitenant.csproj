@@ -12,7 +12,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <PackageId>Orleans.Multitenant</PackageId>
-        <PackageVersion>1.0.0-preview.2</PackageVersion>
+        <PackageVersion>1.0.0-preview.1</PackageVersion>
         <Title>Orleans Multitenant</Title>
         <Description>Secure, flexible tenant separation for Microsoft Orleans 4</Description>
         <Authors>VincentH.NET;Applicita</Authors>
@@ -26,12 +26,16 @@
         <RepositoryUrl>https://github.com/Applicita/Orleans.Multitenant</RepositoryUrl>
         <PackageTags>multitenant;multi-tenant;tenant;tenant separation;separation;Orleans;Orleans 4;Microsoft Orleans;Applicita</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- Enable Source Link -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="CSharp-Toolkit-Icon.png" Pack="true" PackagePath="\"/>
+        <None Include="CSharp-Toolkit-Icon.png" Pack="true" PackagePath="\" />
         <None Include="Readme.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
@@ -39,6 +43,7 @@
 		<PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="4.0.0-preview2" />
 		<PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
 		<PackageReference Include="Microsoft.Orleans.Streaming" Version="4.0.0-preview2" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 
 </Project>
