@@ -105,12 +105,12 @@ When `AddMultitenantCommunicationSeparation` is used, all of the methods are gua
 Outside a tenant grain:
 - use `factory.ForTenant("tenant id")` to access tenant grains:<br />
   ```csharp
-  var otherTenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
+  var tenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
   ```
 
 - use the `IClusterClient` extension method `client.GetTenantStreamProvider("provider name", "tenant id") to access tenant streams.<br />
   ```csharp
-  var myTenantStream = client.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
+  var tenantStream = client.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
   ```
 
 **Note** that guarding against unauthorized tenant access from outside a grain (e.g. in an ASP.NET controller) is in the domain of the application developer, since what constitutes a tenant context there is application specific.
