@@ -10,7 +10,7 @@ string? tableStorageConnectionString = builder.Configuration["Azure:TableStorage
 
 builder.Host.UseOrleans((_, silo) => silo
     .UseLocalhostClustering()
-    .AddMultitenantGrainCommunicationSeparation()
+    .AddMultitenantCommunicationSeparation()
     .AddMultitenantGrainStorageAsDefault<AzureTableGrainStorage, AzureTableStorageOptions, AzureTableGrainStorageOptionsValidator>(
             (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
                 options.ConfigureTableServiceClient(tableStorageConnectionString)),
