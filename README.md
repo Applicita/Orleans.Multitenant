@@ -13,7 +13,7 @@ Secure, flexible tenant separation for Microsoft Orleans 4
 Scope and limitations:
 - Tenant id's are part of the key for a `GrainId` or `StreamId` and can be any string; the same goes for keys within a tenant. The creation and lifecycle management of tenant id's is in the application domain; as far as Orleans.Multitenant is concerned, tenants are **virtual** just like grains and streams - so conceptually all possible tenant id's always exist
 
-- Orleans.Multitenant guards against unauthorized access from within a grain, since only in a grain a tenant-specific context exists (the grain id contains the tenant id). Guarding against unauthorized tenant access from outside a grain (e.g. when using a cluster client in an ASP.NET controller) is in the domain of the application developer, since what constitutes a tenant context there is application specific
+- Orleans.Multitenant guards against unauthorized access from within grains that have a GrainId, since there a tenant-specific context exists (the grain id contains the tenant id). Guarding against unauthorized tenant access from outside a grain (e.g. when using a cluster client in an ASP.NET controller, or in a stateless worker grain or a grain service) is in the domain of the application developer, since what constitutes a tenant context there is application specific
 
 - Only `IGrainWithStringKey` grains can be tenant specific
 
@@ -102,7 +102,7 @@ By default different tenants are not authorized to communicate, and only calls t
 When `AddMultitenantCommunicationSeparation` is used, all of the methods are guarded against unautorized access.
 
 ### Access tenant grains and streams outside a tenant grain
-Outside a tenant grain:
+Outside a tenant grain (e.g. in a cluster client, a stateless worker grain or a grain service):
 - use `factory.ForTenant("tenant id")` to access tenant grains:<br />
   ```csharp
   var tenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
