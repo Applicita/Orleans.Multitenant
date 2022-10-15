@@ -16,7 +16,7 @@ public static class SiloBuilderExtensions
     /// <param name="grainCallTenantSeparatorFactory">A factory to instantiate a custom <see cref="IGrainCallTenantSeparator"/> implementation (optional; default is to consider calls to interfaces outside the Orleans namespace as tenant separated)</param>
     /// <returns>The same instance of the <see cref="ISiloBuilder"/> for chaining</returns>
     /// <remarks>If this method is not used, there will be no separation of grain communication between tenants - grains and streams of all tenants will be able to communicate unrestricted</remarks>
-    public static ISiloBuilder AddMultitenantGrainCommunicationSeparation(
+    public static ISiloBuilder AddMultitenantCommunicationSeparation(
         this ISiloBuilder builder,
         Func<IServiceProvider, ICrossTenantAuthorizer>? crossTenantAuthorizerFactory = null,
         Func<IServiceProvider, IGrainCallTenantSeparator>? grainCallTenantSeparatorFactory = null)

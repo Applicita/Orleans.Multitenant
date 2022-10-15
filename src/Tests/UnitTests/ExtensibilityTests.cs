@@ -123,7 +123,7 @@ public sealed class ExtensibilityTests : IClassFixture<ExtensibilityTests.Cluste
         {
             public void Configure(ISiloBuilder siloBuilder) => siloBuilder
                 .ConfigureLogging(l => l.AddProcessing())
-                .AddMultitenantGrainCommunicationSeparation(
+                .AddMultitenantCommunicationSeparation(
                     _ => new ExtendedCrossTenantAccessAuthorizer(),
                     _ => new ExtendedIncomingGrainCallTenantSeparator())
                 .AddMultitenantGrainStorageAsDefault<

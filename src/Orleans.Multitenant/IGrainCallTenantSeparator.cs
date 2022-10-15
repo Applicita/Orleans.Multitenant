@@ -1,6 +1,6 @@
 ﻿namespace Orleans.Multitenant;
 
-/// <summary>To control which incoming grain calls are considered cross-tenant, register an implementation of this interface with <see cref="SiloBuilderExtensions.AddMultitenantGrainCommunicationSeparation(Hosting.ISiloBuilder, Func{IServiceProvider, Orleans.Multitenant.ICrossTenantAuthorizer}?, Func{IServiceProvider, Orleans.Multitenant.IGrainCallTenantSeparator}?)"/></summary>
+/// <summary>To control which incoming grain calls are considered cross-tenant, register an implementation of this interface with <see cref="SiloBuilderExtensions.AddMultitenantCommunicationSeparation(Hosting.ISiloBuilder, Func{IServiceProvider, Orleans.Multitenant.ICrossTenantAuthorizer}?, Func{IServiceProvider, Orleans.Multitenant.IGrainCallTenantSeparator}?)"/></summary>
 public interface IGrainCallTenantSeparator
 {
     /// <summary>Is called to determine whether the incoming grain call should be authorized</summary>

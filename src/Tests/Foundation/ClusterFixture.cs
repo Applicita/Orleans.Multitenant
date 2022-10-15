@@ -31,7 +31,7 @@ public sealed class ClusterFixture : IDisposable
     {
         public void Configure(ISiloBuilder siloBuilder) => siloBuilder
             .ConfigureLogging(l => l.AddProcessing())
-            .AddMultitenantGrainCommunicationSeparation(_ => new CrossTenantAccessAuthorizer())
+            .AddMultitenantCommunicationSeparation(_ => new CrossTenantAccessAuthorizer())
             .AddMultitenantGrainStorageAsDefault<
                 MemoryGrainStorage,
                 MemoryGrainStorageOptions,
