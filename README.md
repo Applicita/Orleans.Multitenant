@@ -143,9 +143,9 @@ string  GetKeyWithinTenant(this StreamId streamId);
 ### The null tenant
 Note that a tenant id with value `null` means that a grain was not created with the tenant aware API's as described in this readme. This could e.g. be the case when 3rd party code is responsible for creating the grain keys.
 
-Even thought the null tenant cannot be specified in the tenant aware API's it is a valid tenant Id value in the parameters of the `ICrossTenantAuthorizer.IsAccessAuthorized` callback. This enables support for scenario's like above.
+Even though the null tenant cannot be specified in the tenant aware API's, it is a valid tenant Id value in the parameters of the `ICrossTenantAuthorizer.IsAccessAuthorized` callback. This enables support for scenario's like above.
 
-The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods.
+The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
 
 
 
