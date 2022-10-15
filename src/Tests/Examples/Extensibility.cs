@@ -48,7 +48,7 @@ namespace OrleansMultitenant.Tests.Examples.Extensibility
     class TenantSpecificGrain : Grain, ITenantSpecificGrain
     {
         public async Task CallTenantSpecificGrain(string targetGrainId)
-         => await GrainFactory.ForTenantOf(this).GetGrain<ITenantSpecificGrain>(targetGrainId).AMethod();
+         => await this.GetTenantGrainFactory().GetGrain<ITenantSpecificGrain>(targetGrainId).AMethod();
 
         public async Task CallTenantSpecificGrain(string targetTenantId, string targetGrainId)
          => await GrainFactory.ForTenant(targetTenantId).GetGrain<ITenantSpecificGrain>(targetGrainId).AMethod();

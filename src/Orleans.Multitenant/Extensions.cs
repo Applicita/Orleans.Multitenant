@@ -190,6 +190,24 @@ public static class GrainExtensions
 
         return new(targetTenantId, grain.GetStreamProvider(name));
     }
+
+    /// <summary>Get a tenant-specific grain factory from within a <see cref="Grain"/>, for the tenant that this grain belongs to</summary>
+    /// <param name="grain">This tenant specific grain</param>
+    /// <returns>The <see cref="TenantGrainFactory"/></returns>
+    public static TenantGrainFactory GetTenantGrainFactory(this Grain grain) => new(grain.GetGrainFactory(), grain);
+
+    /// <summary>Get a tenant-specific grain factory from within a <see cref="Grain"/>, for a specified tenant</summary>
+    /// <param name="grain">This tenant specific grain</param>
+    /// <param name="tenantId">The factory tenant</param>
+    /// <returns>The <see cref="TenantGrainFactory"/></returns>
+    /// <remarks>Note that a <see cref="ICrossTenantAuthorizer"/> service must be registered that allows access from the tenant to which <paramref name="grain"/> belongs to the <paramref name="tenantId"/> tenant</remarks>
+    public static TenantGrainFactory GetTenantGrainFactory(this Grain grain, string tenantId)
+    {
+        var targetTenantId = tenantId.AsTenantId();
+        grain.ThrowIfAccessIsUnauthorized(targetTenantId);
+
+        return new(grain.GetGrainFactory(), tenantId);
+    }
 }
 
 public static class ClusterClientExtensions
@@ -205,13 +223,13 @@ public static class ClusterClientExtensions
 
 public static class GrainFactoryExtensions
 {
-    /// <summary>Get a tenant-specific grain factory from within an <see cref="IAddressable"/> (i.e. a grain), for the tenant that this grain belongs to</summary>
+    /// <summary>Get a tenant-specific grain factory from an <see cref="IAddressable"/> (i.e. a grain), for the tenant that this grain belongs to</summary>
     /// <param name="factory">A regular (tenant-unaware) grain factory</param>
     /// <param name="grain">This tenant specific grain</param>
     /// <returns>The <see cref="TenantGrainFactory"/></returns>
     public static TenantGrainFactory ForTenantOf(this IGrainFactory factory, IAddressable grain) => new(factory, grain);
 
-    /// <summary>Get a tenant-specific grain factory from outside an <see cref="IAddressable"/> (e.g. in a <see cref="IClusterClient"/>), for a specified tenant</summary>
+    /// <summary>Get a tenant-specific grain factory without an <see cref="IAddressable"/> (e.g. in a cluster client, a stateless worker grain or a grain service), for a specified tenant</summary>
     /// <param name="factory">A regular (tenant-unaware) grain factory</param>
     /// <param name="tenantId">The factory tenant</param>
     /// <returns>The <see cref="TenantGrainFactory"/></returns>

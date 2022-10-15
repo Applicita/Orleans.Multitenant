@@ -1,5 +1,13 @@
-# Orleans.Multitenant
+# <img src="img/CSharp-Toolkit-Icon.png" alt="Backend Toolkit" width="64px" />Orleans.Multitenant
 Secure, flexible tenant separation for Microsoft Orleans 4
+
+> [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Orleans.Multitenant?color=gold&label=NuGet:%20Orleans.Multitenant&style=plastic)](https://www.nuget.org/packages/Orleans.Multitenant)<br />
+> (install in your silo client and grain implementation projects)
+
+## Summary
+[Microsoft Orleans 4](https://github.com/dotnet/orleans/releases/tag/v4.0.0-preview2) is a great technology for building distributed, cloud-native applications. It was designed to reduce the complexity of building this type of applications for C# developers.
+
+However, creating multi tenant applications with Orleans out of the box requires careful design, complex coding and significant testing to prevent unintentional leakage of communication or stored data across tenants. Orleans.Multitenant adds this capability to Orleans for free, as an uncomplicated, flexible and extensible API that lets developers:
 
 - **Separate storage** per tenant in any Orleans storage provider, using your own logic:<br />
   ![Example Azure Table Storage](img/example-azure-table-storage.png)
@@ -10,14 +18,14 @@ Secure, flexible tenant separation for Microsoft Orleans 4
 
 - **Secure** against development mistakes: unauthorized access to a tenant specific grain or stream throws an `UnauthorizedException`, and using a non-tenant aware API on a tenant aware stream is blocked and logged.
 
-Scope and limitations:
-- Tenant id's are part of the key for a `GrainId` or `StreamId` and can be any string; the same goes for keys within a tenant. The creation and lifecycle management of tenant id's is in the application domain; as far as Orleans.Multitenant is concerned, tenants are **virtual** just like grains and streams - so conceptually all possible tenant id's always exist
+## Scope and limitations
+- Tenant id's are part of the key for a `GrainId` or `StreamId` and can be any string; the same goes for keys within a tenant. The creation and lifecycle management of tenant id's is the responsibility of the application developer; as far as Orleans.Multitenant is concerned, tenants are **virtual** just like grains and streams - so conceptually all possible tenant id's always exist
 
-- Orleans.Multitenant guards against unauthorized access from within grains that have a GrainId, since only there a tenant-specific context exists (the grain key contains the tenant id). Guarding against unauthorized tenant access from outside a grain (e.g. when using a cluster client in an ASP.NET controller, or in a stateless worker grain or a grain service) is in the domain of the application developer, since what constitutes a tenant context there is application specific
+- Orleans.Multitenant guards against unauthorized access from grains that have a GrainId, since only there a tenant-specific context exists (the grain key contains the tenant id). Guarding against unauthorized tenant access that is not initiated from a tenant grain (e.g. when using a cluster client in an ASP.NET controller, or in a stateless worker grain or a grain service) is the responsibility of the application developer, since what constitutes a tenant context there is application specific
 
 - Only `IGrainWithStringKey` grains can be tenant specific
 
-## Features
+## Usage
 All multitenant features can be independenty enabled and configured at silo startup, with the `ISiloBuilder` `AddMultitenant*` extension methods.
 See the inline documentation for more details on how to use the API's that are mentioned in this readme. All the public API's come with full inline documentation
 
@@ -77,43 +85,50 @@ By default different tenants are not authorized to communicate, and only calls t
 - An attempt to publish an event to a multitenant stream without using `GetTenantStreamProvider` (i.e. using the Orleans built-in `GetStreamProvider` API) causes the event to be blocked by the stream filter; an error with event Id `TenantUnawareStreamApiUsed` is logged in the silo log (also see `AddMultitenantStreams`)
 
 ### Access tenant grains and streams from a tenant grain
-- To get a tenant grain factory from an `IAddressable` (i.e. a grain) for the tenant that this grain belongs to, use the `IGrainFactory` extension method `factory.ForTenantOf(grain)`:
+Where a tenant grain is available,
+
+- To access grains within the same tenant from within a `Grain`, use the `Grain` extension method `this.GetTenantGrainFactory()`:
   ```csharp
-  var myTenantGrain = factory.ForTenantOf(grain).GetGrain<IMyGrain>("key_within_tenant");
+  var sameTenantGrain = this.GetTenantGrainFactory().GetGrain<IMyGrain>("key_within_tenant");
+  ```
+
+- To access grains that belong to another tenant from within a `Grain`, use the `Grain` extension method `this.GetTenantGrainFactory("tenant_id")`:
+  ```csharp
+  var otherTenantGrain = this.GetTenantGrainFactory("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
+  ```
+
+- To access grains within the same tenant that an `IAddressable` (i.e. a grain) belongs to, use the `IGrainFactory` extension method `factory.ForTenantOf(grain)`:
+  ```csharp
+  var sameTenantGrain = factory.ForTenantOf(grain).GetGrain<IMyGrain>("key_within_tenant");
   ```
   A tenant grain factory is a very lightweight, allocation-free factory wrapper; it can be stored/cached as desired, but it's overhead is extremely low even without that.
 
-- To access grains that belong to another tenant, use `factory.ForTenant("tenant_id")`:
+- To access streams within the same tenant, use the `Grain` extension method `this.GetTenantStreamProvider("provider_name")`:
   ```csharp
-  var otherTenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
-  ```
-
-- To get a tenant stream provider for the tenant that this grain belongs to, use the `Grain` extension method `this.GetTenantStreamProvider("provider_name")`:
-  ```csharp
-  var myTenantStream = this.GetTenantStreamProvider("provider_name").GetStream<int>("stream_namespace", "stream_key_within_tenant");
+  var sameTenantStream = this.GetTenantStreamProvider("provider_name").GetStream<int>("stream_namespace", "stream_key_within_tenant");
   ```
   A tenant stream provider is a very lightweight, allocation-free stream provider wrapper; it can be stored/cached as desired, but it's overhead is extremely low even without that.
 
 - To access streams that belong to another tenant, use the `Grain` extension method `this.GetTenantStreamProvider("provider_name", "tenant_id"):
   ```csharp
-  var myTenantStream = this.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
+  var otherTenantStream = this.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
   ```
 
-When `AddMultitenantCommunicationSeparation` is used, all of the methods are guarded against unautorized access.
+When `AddMultitenantCommunicationSeparation` is used, all of the above methods are guarded against unautorized access.
 
-### Access tenant grains and streams outside a tenant grain
-Outside a tenant grain (e.g. in a cluster client, a stateless worker grain or a grain service):
-- use `factory.ForTenant("tenant id")` to access tenant grains:<br />
+### Access tenant grains and streams without a tenant grain
+Where no tenant grain is available (e.g. in a cluster client, a stateless worker grain or a grain service),
+- To access tenant grains, use the `IGrainFactory` extension method `factory.ForTenant("tenant_id")`:<br />
   ```csharp
   var tenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
   ```
 
-- use the `IClusterClient` extension method `client.GetTenantStreamProvider("provider name", "tenant id") to access tenant streams.<br />
+- To access tenant streams, use the `IClusterClient` extension method `client.GetTenantStreamProvider("provider name", "tenant id"):<br />
   ```csharp
   var tenantStream = client.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
   ```
 
-**Note** that guarding against unauthorized tenant access from outside a grain (e.g. in an ASP.NET controller) is in the domain of the application developer, since what constitutes a tenant context there is application specific.
+**Note** that guarding against unauthorized tenant access that is not initiated from a tenant grain (e.g. when using a cluster client in an ASP.NET controller, or in a stateless worker grain or a grain service) is the responsibility of the application developer, since what constitutes a tenant context there is application specific
 
 ### Grain/stream key and tenant id
 Tenant id's are stored in the key of a tenant specific `GrainId` / `StreamId`. Use these methods when you need to access the individual parts of the key:
@@ -124,6 +139,13 @@ string  GetKeyWithinTenant(this IAddressable grain);
 string? GetTenantId(this StreamId streamId);
 string  GetKeyWithinTenant(this StreamId streamId);
 ```
+
+### The null tenant
+Note that a tenant id with value `null` means that a grain was not created with the tenant aware API's as described in this readme. This could e.g. be the case when 3rd party code is responsible for creating the grain keys.
+
+Even thought the null tenant cannot be specified in the tenant aware API's it is a valid tenant Id value in the parameters of the `ICrossTenantAuthorizer.IsAccessAuthorized` callback. This enables support for scenario's like above.
+
+The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods.
 
 
 

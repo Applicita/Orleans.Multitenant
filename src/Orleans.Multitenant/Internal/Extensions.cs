@@ -136,6 +136,12 @@ static class GrainExtensions
     static ICrossTenantAuthorizer? authorizer;
     static IServiceProvider? authorizerServiceProvider;
     static PropertyInfo? grainServiceProviderProperty;
+    static PropertyInfo? grainFactoryProperty;
+
+    internal static IGrainFactory GetGrainFactory(this Grain grain)
+     => (IGrainFactory)
+        (grainFactoryProperty ??= typeof(Grain).GetProperty("GrainFactory", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!)
+        .GetValue(grain)!;
 
     internal static void ThrowIfAccessIsUnauthorized(this Grain grain, ReadOnlySpan<byte> targetTenantId)
     {
