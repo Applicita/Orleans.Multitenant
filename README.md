@@ -50,6 +50,7 @@ To configure a silo to use a specific stream provider type as a named stream pro
     .AddMemoryGrainStorage(name)
  )
 ```
+Both implicit and explicit stream subscriptions are supported.
 
 ### Add multitenant communication separation
 To configure a silo to use tenant separation for grain communication, use `AddMultitenantCommunicationSeparation` . Separation will be enforced for both grain calls and streams (the latter if used together with `AddMultitenantStreams`)
@@ -87,7 +88,7 @@ By default different tenants are not authorized to communicate, and only calls t
   var otherTenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
   ```
 
-- To Get a tenant stream provider for the tenant that this grain belongs to, use the `Grain` extension method `this.GetTenantStreamProvider("provider_name")`:
+- To get a tenant stream provider for the tenant that this grain belongs to, use the `Grain` extension method `this.GetTenantStreamProvider("provider_name")`:
   ```csharp
   var myTenantStream = this.GetTenantStreamProvider("provider_name").GetStream<int>("stream_namespace", "stream_key_within_tenant");
   ```
@@ -100,11 +101,17 @@ By default different tenants are not authorized to communicate, and only calls t
 
 When `AddMultitenantCommunicationSeparation` is used, all of the methods are guarded against unautorized access.
 
-### Access tenant grains and streams outside a grain
-Outside a grain:
-- use the `IClusterClient` extension method `client.GetTenantStreamProvider("provider name", "tenant id") to access streams that belong to another tenant.<br />
+### Access tenant grains and streams outside a tenant grain
+Outside a tenant grain:
+- use `factory.ForTenant("tenant id")` to access tenant grains:<br />
+  ```csharp
+  var otherTenantGrain = factory.ForTenant("tenant_id").GetGrain<IMyGrain>("key_within_tenant");
+  ```
 
-- use `factory.ForTenant("tenant id")` to access grains that belong to a tenant.<br />
+- use the `IClusterClient` extension method `client.GetTenantStreamProvider("provider name", "tenant id") to access tenant streams.<br />
+  ```csharp
+  var myTenantStream = client.GetTenantStreamProvider("provider_name", "tenant_id").GetStream<int>("stream_namespace", "stream_key_within_tenant");
+  ```
 
 **Note** that guarding against unauthorized tenant access from outside a grain (e.g. in an ASP.NET controller) is in the domain of the application developer, since what constitutes a tenant context there is application specific.
 
@@ -112,10 +119,10 @@ Outside a grain:
 Tenant id's are stored in the key of a tenant specific `GrainId` / `StreamId`. Use these methods when you need to access the individual parts of the key:
 ```csharp
 string? GetTenantId(this IAddressable grain);
-string GetKeyWithinTenant(this IAddressable grain);
+string  GetKeyWithinTenant(this IAddressable grain);
 
 string? GetTenantId(this StreamId streamId);
-string GetKeyWithinTenant(this StreamId streamId);
+string  GetKeyWithinTenant(this StreamId streamId);
 ```
 
 
