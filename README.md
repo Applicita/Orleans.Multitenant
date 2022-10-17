@@ -2,19 +2,19 @@
 Secure, flexible tenant separation for Microsoft Orleans 4
 
 > [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Orleans.Multitenant?color=gold&label=NuGet:%20Orleans.Multitenant&style=plastic)](https://www.nuget.org/packages/Orleans.Multitenant)<br />
-> (install in your silo client and grain implementation projects)
+> (install in silo client and grain implementation projects)
 
 ## Summary
 [Microsoft Orleans 4](https://github.com/dotnet/orleans/releases/tag/v4.0.0-preview2) is a great technology for building distributed, cloud-native applications. It was designed to reduce the complexity of building this type of applications for C# developers.
 
 However, creating multi tenant applications with Orleans out of the box requires careful design, complex coding and significant testing to prevent unintentional leakage of communication or stored data across tenants. Orleans.Multitenant adds this capability to Orleans for free, as an uncomplicated, flexible and extensible API that lets developers:
 
-- **Separate storage** per tenant in any Orleans storage provider, using your own logic:<br />
+- **Separate storage** per tenant in any Orleans storage provider by configuring the storage provider options per tenant:<br />
   ![Example Azure Table Storage](img/example-azure-table-storage.png)
-- **Separate communication** across tenants for grain calls and streams, or use your own logic to allow specific access between tenants:<br /> 
+- **Separate communication** across tenants for grain calls and streams, or allow specific access between tenants:<br /> 
   ![Example Access Authorizer](img/example-access-authorizer.png)<br />
 
-- **Choose where to use** - for part or all of your application; combine regular stream/storage providers with multitenant ones, use tenant-specific grains/streams and tenant unaware ones. Want to add multitenant storage to an existing application? You can bring along existing grain state in the null tenant. Or add a multitenant storage provider and keep the existing non-multitenant provider as well
+- **Choose where to use** - for part or all of an application; combine regular stream/storage providers with multitenant ones, use tenant-specific grains/streams and tenant unaware ones. Want to add multitenant storage to an existing application? You can bring along existing grain state in the null tenant. Or add a multitenant storage provider and keep the existing non-multitenant provider as well
 
 - **Secure** against development mistakes: unauthorized access to a tenant specific grain or stream throws an `UnauthorizedException`, and using a non-tenant aware API on a tenant aware stream is blocked and logged.
 
@@ -65,7 +65,7 @@ To configure a silo to use tenant separation for grain communication, use `AddMu
 
 Optionally pass in an `ICrossTenantAuthorizer` factory and/or an `IGrainCallTenantSeparator` factory, to control which tenants are authorized to communicate, and which grain calls require authorization:
 ```csharp
-.AddMultitenantCommunicationSeparation(_ => new CrossTenantAccessAuthorizer())
+.AddMultitenantCommunicationSeparation(_ => new ExtendedCrossTenantAccessAuthorizer())
 ```
 ```csharp
 class ExtendedCrossTenantAccessAuthorizer : ICrossTenantAuthorizer
@@ -131,7 +131,7 @@ Where no tenant grain is available (e.g. in a cluster client, a stateless worker
 **Note** that guarding against unauthorized tenant access that is not initiated from a tenant grain (e.g. when using a cluster client in an ASP.NET controller, or in a stateless worker grain or a grain service) is the responsibility of the application developer, since what constitutes a tenant context there is application specific
 
 ### Grain/stream key and tenant id
-Tenant id's are stored in the key of a tenant specific `GrainId` / `StreamId`. Use these methods when you need to access the individual parts of the key:
+Tenant id's are stored in the key of a tenant specific `GrainId` / `StreamId`. Use these methods to access the individual parts of the key:
 ```csharp
 string? GetTenantId(this IAddressable grain);
 string  GetKeyWithinTenant(this IAddressable grain);
