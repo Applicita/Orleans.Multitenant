@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,9 +12,9 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <PackageId>Orleans.Multitenant</PackageId>
-        <PackageVersion>1.0.0-preview.2</PackageVersion>
+        <PackageVersion>1.0.0-rc2</PackageVersion>
         <Title>Orleans Multitenant</Title>
-        <Description>Secure, flexible tenant separation for Microsoft Orleans 4</Description>
+        <Description>Secure, flexible tenant separation for Microsoft Orleans 7</Description>
         <Authors>VincentH.NET;Applicita</Authors>
         <Company>Applicita</Company>
         <Copyright>Copyright © Applicita</Copyright>
@@ -24,7 +24,7 @@
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageReleaseNotes>See source repository for release notes</PackageReleaseNotes>
         <RepositoryUrl>https://github.com/Applicita/Orleans.Multitenant</RepositoryUrl>
-        <PackageTags>multitenant;multi-tenant;tenant;tenant separation;separation;Orleans;Orleans 4;Microsoft Orleans;Applicita</PackageTags>
+        <PackageTags>multitenant;multi-tenant;tenant;tenant separation;separation;Orleans;Orleans 7;Microsoft Orleans;Applicita</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <!-- Enable Source Link -->
@@ -40,10 +40,10 @@
     </ItemGroup>
 
     <ItemGroup>
-		<PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="4.0.0-preview2" />
-		<PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
-		<PackageReference Include="Microsoft.Orleans.Streaming" Version="4.0.0-preview2" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+		<PackageReference Include="Microsoft.Orleans.Runtime" Version="7.0.0-rc2" />
+		<PackageReference Include="Microsoft.Orleans.Sdk" Version="7.0.0-rc2" />
+		<PackageReference Include="Microsoft.Orleans.Streaming" Version="7.0.0-rc2" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
 </Project>

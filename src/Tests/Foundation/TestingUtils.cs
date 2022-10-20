@@ -2,7 +2,7 @@
 
 namespace OrleansMultitenant.Tests;
 
-class TestingUtils
+sealed class TestingUtils
 {
     /// <summary> Run the predicate until it succeed or times out </summary>
     /// <param name="predicate">The predicate to run</param>

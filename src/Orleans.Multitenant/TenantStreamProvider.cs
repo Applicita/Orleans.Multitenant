@@ -61,13 +61,13 @@ public readonly record struct TenantStream<T> : IComparable<TenantStream<T>>
 
     internal TenantStream(IAsyncStream<TenantEvent<T>> stream) => this.stream = stream;
 
-    /// <inheritdoc cref="IAsyncStream{T}.IsRewindable"/>
+    /// <inheritdoc cref="IAsyncStream.IsRewindable"/>
     public bool IsRewindable => stream.IsRewindable;
 
-    /// <inheritdoc cref="IAsyncStream{T}.ProviderName"/>
+    /// <inheritdoc cref="IAsyncStream.ProviderName"/>
     public string ProviderName => stream.ProviderName;
 
-    /// <inheritdoc cref="IAsyncStream{T}.StreamId"/>
+    /// <inheritdoc cref="IAsyncStream.StreamId"/>
     public StreamId StreamId => stream.StreamId;
 
     /// <inheritdoc cref="IAsyncStream{T}.GetAllSubscriptionHandles"/>

@@ -27,7 +27,7 @@ public sealed class ClusterFixture : IDisposable
 
     public TestCluster Cluster { get; }
 
-    class SiloConfigurator : ISiloConfigurator
+    sealed class SiloConfigurator : ISiloConfigurator
     {
         public void Configure(ISiloBuilder siloBuilder) => siloBuilder
             .ConfigureLogging(l => l.AddProcessing())
@@ -45,7 +45,7 @@ public sealed class ClusterFixture : IDisposable
             .AddMemoryGrainStorage(TenantUnawareStreamProviderName);
     }
 
-    class ClientConfigurator : IClientBuilderConfigurator
+    sealed class ClientConfigurator : IClientBuilderConfigurator
     {
         public void Configure(IConfiguration configuration, IClientBuilder clientBuilder) => clientBuilder
             .AddMemoryStreams<DefaultMemoryMessageBodySerializer>(TenantAwareStreamProviderName)
@@ -53,7 +53,7 @@ public sealed class ClusterFixture : IDisposable
     }
 }
 
-class CrossTenantAccessAuthorizer : ICrossTenantAuthorizer
+sealed class CrossTenantAccessAuthorizer : ICrossTenantAuthorizer
 {
     /// <remarks>static can be used to access the same object instances in silo's and tests, because <see cref="TestCluster"/> uses in-process silo's</remarks>
     internal static ConcurrentQueue<(string? sourceTenantId, string? targetTenantId)> AccessChecks { get; } = new();

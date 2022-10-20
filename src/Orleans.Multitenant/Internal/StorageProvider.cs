@@ -31,22 +31,22 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
         ILogger<MultitenantStorage> logger)
      => (this.name, this.options, this.tenantGrainStorageFactory, this.logger) = (name, options, tenantGrainStorageFactory, logger);
 
-    public async Task ClearStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
+    public async Task ClearStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainReference);
-        await provider.ClearStateAsync(grainType, grainReference, grainState);
+        var provider = await GetTenantStorageProvider(grainId);
+        await provider.ClearStateAsync(grainType, grainId, grainState);
     }
 
-    public async Task ReadStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
+    public async Task ReadStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainReference);
-        await provider.ReadStateAsync(grainType, grainReference, grainState);
+        var provider = await GetTenantStorageProvider(grainId);
+        await provider.ReadStateAsync(grainType, grainId, grainState);
     }
 
-    public async Task WriteStateAsync<T>(string grainType, GrainReference grainReference, IGrainState<T> grainState)
+    public async Task WriteStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainReference);
-        await provider.WriteStateAsync(grainType, grainReference, grainState);
+        var provider = await GetTenantStorageProvider(grainId);
+        await provider.WriteStateAsync(grainType, grainId, grainState);
     }
 
     public void Participate(ISiloLifecycle observer)
@@ -55,9 +55,9 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
         siloLifecycleRepeater = new(observer, logger);
     }
 
-    async Task<IGrainStorage> GetTenantStorageProvider(GrainReference grainReference)
+    async Task<IGrainStorage> GetTenantStorageProvider(GrainId grainId)
     {
-        string tenantId = grainReference.GetTenantId() ?? options.TenantIdForNullTenant;
+        string tenantId = grainId.GetTenantId() ?? options.TenantIdForNullTenant;
 
         if (!tenantStorageProviders.TryGetValue(tenantId, out var grainStorage))
         {

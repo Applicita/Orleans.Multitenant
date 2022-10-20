@@ -119,7 +119,7 @@ public sealed class ExtensibilityTests : IClassFixture<ExtensibilityTests.Cluste
 
         public TestCluster Cluster { get; }
 
-        class SiloConfigurator : ISiloConfigurator
+        sealed class SiloConfigurator : ISiloConfigurator
         {
             public void Configure(ISiloBuilder siloBuilder) => siloBuilder
                 .ConfigureLogging(l => l.AddProcessing())
@@ -136,7 +136,7 @@ public sealed class ExtensibilityTests : IClassFixture<ExtensibilityTests.Cluste
                     .AddMemoryGrainStorage(name));
         }
 
-        class ClientConfigurator : IClientBuilderConfigurator
+        sealed class ClientConfigurator : IClientBuilderConfigurator
         {
             public void Configure(IConfiguration configuration, IClientBuilder clientBuilder) => clientBuilder
                 .AddMemoryStreams<DefaultMemoryMessageBodySerializer>(StreamProviderName);

@@ -21,7 +21,7 @@ interface IRepeatedSiloLifecycleObservable
     void SubscribeStopEvents(IRepeatedSiloLifecycleObserver observer);
 }
 
-record LifecycleStartupRecording(int HighestCompletedStageOnParticipate, int LowestStoppedStageOnParticipate, ReadOnlyCollection<LifecycleStartEventRecord> Events, ISiloLifecycle Lifecycle);
+sealed record LifecycleStartupRecording(int HighestCompletedStageOnParticipate, int LowestStoppedStageOnParticipate, ReadOnlyCollection<LifecycleStartEventRecord> Events, ISiloLifecycle Lifecycle);
 
 readonly record struct LifecycleStartEventRecord(int LifecycleIndex, int HighestCompletedStage, int LowestStoppedStage);
 

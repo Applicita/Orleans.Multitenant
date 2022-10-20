@@ -16,7 +16,7 @@ sealed class ProcessingLoggerProvider : ILoggerProvider
     public void Dispose() { }
 }
 
-class ProcessingLogger : ILogger
+sealed class ProcessingLogger : ILogger
 {
     /// <remarks>static can be used to access the same object instances in silo's and tests, because <see cref="Orleans.TestingHost.TestCluster"/> uses in-process silo's</remarks>
     internal static ProcessingLogger Instance { get; } = new();
@@ -42,5 +42,5 @@ class ProcessingLogger : ILogger
             logProcessor(logLevel, exception, formatter(state, exception));
     }
 
-    class NopDisposable : IDisposable { void IDisposable.Dispose() { } }
+    sealed class NopDisposable : IDisposable { void IDisposable.Dispose() { } }
 }

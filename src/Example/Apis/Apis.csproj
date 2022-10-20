@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -11,14 +11,15 @@
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);1591;CA1852</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="4.0.0-preview2" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="4.0.0-preview2" />
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="4.0.0-preview2" />
-    <PackageReference Include="Orleans.Multitenant" Version="1.0.0-preview.2" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="7.0.0-rc2" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="7.0.0-rc2" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="7.0.0-rc2" />
+    <PackageReference Include="Orleans.Multitenant" Version="1.0.0-rc2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0-rc.2.22476.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

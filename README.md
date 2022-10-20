@@ -1,11 +1,11 @@
 # <img src="img/CSharp-Toolkit-Icon.png" alt="Backend Toolkit" width="64px" />Orleans.Multitenant
-Secure, flexible tenant separation for Microsoft Orleans 4
+Secure, flexible tenant separation for Microsoft Orleans 7
 
 > [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Orleans.Multitenant?color=gold&label=NuGet:%20Orleans.Multitenant&style=plastic)](https://www.nuget.org/packages/Orleans.Multitenant)<br />
 > (install in silo client and grain implementation projects)
 
 ## Summary
-[Microsoft Orleans 4](https://github.com/dotnet/orleans/releases/tag/v4.0.0-preview2) is a great technology for building distributed, cloud-native applications. It was designed to reduce the complexity of building this type of applications for C# developers.
+[Microsoft Orleans 7](https://github.com/dotnet/orleans/releases/tag/v7.0.0-rc2) is a great technology for building distributed, cloud-native applications. It was designed to reduce the complexity of building this type of applications for C# developers.
 
 However, creating multi tenant applications with Orleans out of the box requires careful design, complex coding and significant testing to prevent unintentional leakage of communication or stored data across tenants. Orleans.Multitenant adds this capability to Orleans for free, as an uncomplicated, flexible and extensible API that lets developers:
 

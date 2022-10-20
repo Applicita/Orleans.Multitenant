@@ -2,7 +2,7 @@
 
 namespace OrleansMultitenant.Tests.Examples.Extensibility
 {
-    class ExtendedCrossTenantAccessAuthorizer : ICrossTenantAuthorizer
+    sealed class ExtendedCrossTenantAccessAuthorizer : ICrossTenantAuthorizer
     {
         internal const string RootTenantId = "RootTenant";
 
@@ -17,7 +17,7 @@ namespace OrleansMultitenant.Tests.Examples.Extensibility
         }
     }
 
-    class ExtendedIncomingGrainCallTenantSeparator : IGrainCallTenantSeparator
+    sealed class ExtendedIncomingGrainCallTenantSeparator : IGrainCallTenantSeparator
     {
         /// <remarks>static can be used to access the same object instances in silo's and tests, because <see cref="Orleans.TestingHost.TestCluster"/> uses in-process silo's</remarks>
         internal static int CrossTenantCallCount;
@@ -45,7 +45,7 @@ namespace OrleansMultitenant.Tests.Examples.Extensibility
         Task AMethod();
     }
 
-    class TenantSpecificGrain : Grain, ITenantSpecificGrain
+    sealed class TenantSpecificGrain : Grain, ITenantSpecificGrain
     {
         public async Task CallTenantSpecificGrain(string targetGrainId)
          => await this.GetTenantGrainFactory().GetGrain<ITenantSpecificGrain>(targetGrainId).AMethod();
@@ -81,7 +81,7 @@ namespace OrleansMultitenant.Tests.Examples.Extensibility.CrossTenant
         Task AMethod();
     }
 
-    class CrossTenantGrain : Grain, ICrossTenantGrain
+    sealed class CrossTenantGrain : Grain, ICrossTenantGrain
     {
         public async Task CallTenantSpecificGrain(string targetTenantId, string targetGrainId)
          => await GrainFactory.ForTenant(targetTenantId).GetGrain<ITenantSpecificGrain>(targetGrainId).AMethod();

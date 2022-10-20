@@ -3,10 +3,10 @@ using Orleans.Runtime;
 
 namespace Orleans4Multitenant.Services.Tenant;
 
-class Tenant : GrainBase<Tenant.State>, ITenant
+sealed class Tenant : GrainBase<Tenant.State>, ITenant
 {
     [GenerateSerializer]
-    internal class State
+    internal sealed class State
     {
         [Id(0)] public TenantInfo Info { get; set; } = new(string.Empty);
         [Id(1)] public Dictionary<Guid, UserInfo> Users { get; set; } = new();

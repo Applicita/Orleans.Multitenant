@@ -42,7 +42,7 @@ static class GrainExtensions
      => grain.GetStreamProvider(ClusterFixture.TenantUnawareStreamProviderName).GetStream<int>(id);
 }
 
-class StreamProducerGrain : Grain, IStreamProducerGrain
+sealed class StreamProducerGrain : Grain, IStreamProducerGrain
 {
     public Task ProduceEvent(string @namespace, string key, int value) => this.IsTenantAware()
         ? this.GetTenantAwareStream(StreamId.Create(@namespace, key)).OnNextAsync(value)
@@ -50,7 +50,7 @@ class StreamProducerGrain : Grain, IStreamProducerGrain
 }
 
 [ImplicitStreamSubscription(Constants.Stream1Namespace)]
-class ImplicitStreamSubscriberGrain : Grain, IImplicitStreamSubscriberGrain
+sealed class ImplicitStreamSubscriberGrain : Grain, IImplicitStreamSubscriberGrain
 {
     int? lastValue;
     StreamSubscriptionHandle<TenantEvent<int>>? tenantAwaresubscription;
@@ -89,7 +89,7 @@ class ImplicitStreamSubscriberGrain : Grain, IImplicitStreamSubscriberGrain
     }
 }
 
-class ExplicitStreamSubscriberGrain : Grain, IExplicitStreamSubscriberGrain
+sealed class ExplicitStreamSubscriberGrain : Grain, IExplicitStreamSubscriberGrain
 {
     int? lastValue;
     StreamSubscriptionHandle<TenantEvent<int>>? tenantAwaresubscription;

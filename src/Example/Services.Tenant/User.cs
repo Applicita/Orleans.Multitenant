@@ -16,10 +16,10 @@ interface IUser : IGrainWithStringKey
     Task Clear();
 }
 
-class User : GrainBase<User.State>, IUser
+sealed class User : GrainBase<User.State>, IUser
 {
     [GenerateSerializer]
-    internal class State
+    internal sealed class State
     {
         [Id(0)] public UserInfo Info { get; set; } = new(Guid.Empty, string.Empty);
     }

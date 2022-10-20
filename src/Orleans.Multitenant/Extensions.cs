@@ -254,6 +254,21 @@ public static class AddressableExtensions
     => grain.GetGrainId().Key.Value.Span.GetKey();
 }
 
+public static class GrainIdExtensions
+{
+    /// <summary>Get the tenant id part of the <see cref="GrainId"/> key</summary>
+    /// <param name="grainId">This grain id</param>
+    /// <returns>The tenant id</returns>
+    public static string? GetTenantId(this GrainId grainId)
+    => grainId.TryGetTenantId().TenantIdString();
+
+    /// <summary>Get the part of the <see cref="GrainId"/> key that identifies it within it's tenant</summary>
+    /// <param name="grainId">This grain id</param>
+    /// <returns>The key within the tenant. This corresponds to the keyWithinTenant parameter of <see cref="TenantGrainFactory.GetGrain(Type, string)"/></returns>
+    public static string GetKeyWithinTenant(this GrainId grainId)
+    => grainId.Key.Value.Span.GetKey();
+}
+
 public static class StreamIdExtensions
 {
     /// <summary>Get the tenant id part of the <see cref="StreamId"/> key</summary>
@@ -264,7 +279,7 @@ public static class StreamIdExtensions
 
     /// <summary>Get the part of the <see cref="StreamId"/> key that identifies it within it's tenant</summary>
     /// <param name="streamId">This stream id</param>
-    /// <returns>The key within the tenant. This corresponds to the keyWithinTenant parameter of <see cref="TenantGrainFactory.GetGrain(Type, string)"/></returns>
+    /// <returns>The key within the tenant. This corresponds to the keyWithinTenant parameter of <see cref="TenantStreamProvider.GetStream{T}(string, string)"/></returns>
     public static string GetKeyWithinTenant(this StreamId streamId)
     => streamId.Key.Span.GetKey();
 }

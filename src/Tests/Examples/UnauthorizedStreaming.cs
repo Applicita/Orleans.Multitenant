@@ -32,14 +32,14 @@ static class GrainExtensions
      => grain.GetStreamProvider(provider).GetStream<int>(id);
 }
 
-class CrossTenantStreamProducerGrain : Grain, ICrossTenantStreamProducerGrain
+sealed class CrossTenantStreamProducerGrain : Grain, ICrossTenantStreamProducerGrain
 {
     public Task ProduceEvent(string provider, string @namespace, string? tenantId, string key, int value) => this.IsTenantAware()
         ? this.GetTenantAwareStream(provider, tenantId, StreamId.Create(@namespace, key)).OnNextAsync(value)
         : this.GetTenantUnawareStream(provider, StreamId.Create(@namespace, key)).OnNextAsync(value);
 }
 
-class CrossTenantExplicitStreamSubscriberGrain : Grain, ICrossTenantExplicitStreamSubscriberGrain
+sealed class CrossTenantExplicitStreamSubscriberGrain : Grain, ICrossTenantExplicitStreamSubscriberGrain
 {
     int? lastValue;
     StreamSubscriptionHandle<TenantEvent<int>>? tenantAwaresubscription;
