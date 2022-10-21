@@ -8,8 +8,8 @@ sealed class Tenant : GrainBase<Tenant.State>, ITenant
     [GenerateSerializer]
     internal sealed class State
     {
-        [Id(0)] public TenantInfo Info { get; set; } = new(string.Empty);
-        [Id(1)] public Dictionary<Guid, UserInfo> Users { get; set; } = new();
+        [Id(0)] internal TenantInfo Info { get; set; } = new(string.Empty);
+        [Id(1)] internal Dictionary<Guid, UserInfo> Users { get; set; } = new();
     }
 
     public Tenant([PersistentState("state")] IPersistentState<State> state) : base(state) { }

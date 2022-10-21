@@ -14,7 +14,7 @@ abstract class GrainBase<T> : GrainBase
 
 abstract class GrainBase : Grain
 {
-    public T GetGrain<T>(Guid id) where T : IGrainWithStringKey
+    internal T GetGrain<T>(Guid id) where T : IGrainWithStringKey
      => this.GetTenantGrainFactory().GetGrain<T>(id.ToString());
 
     protected void ThrowIfNotEqualToKeyWithinTenant(Guid id)
