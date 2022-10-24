@@ -1,8 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
-//using Orleans.Configuration;
+using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.Multitenant;
-//using Orleans.Storage;
+using Orleans.Storage;
 using Orleans4Multitenant.Apis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,23 +11,20 @@ string? tableStorageConnectionString = builder.Configuration["Azure:TableStorage
 builder.Host.UseOrleans((_, silo) => silo
     .UseLocalhostClustering()
     .AddMultitenantCommunicationSeparation()
+    .AddMultitenantGrainStorageAsDefault<AzureTableGrainStorage, AzureTableStorageOptions, AzureTableGrainStorageOptionsValidator>(
+            (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
+                options.ConfigureTableServiceClient(tableStorageConnectionString)),
+            // Called during silo startup, to ensure that any common dependencies
+            // needed for tenant-specific provider instances are initialized
 
-.AddAzureTableGrainStorageAsDefault(options => 
-options.ConfigureTableServiceClient(tableStorageConnectionString))
-
-    //.AddMultitenantGrainStorageAsDefault<AzureTableGrainStorage, AzureTableStorageOptions, AzureTableGrainStorageOptionsValidator>(
-    //        (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
-    //            options.ConfigureTableServiceClient(tableStorageConnectionString)),
-    //            // Called during silo startup, to ensure that any common dependencies
-    //            // needed for tenant-specific provider instances are initialized
-
-    //        configureTenantOptions: (options, tenantId) => {
-    //            options.ConfigureTableServiceClient(tableStorageConnectionString);
-    //            options.TableName = $"OrleansGrainState{tenantId}";
-    //        }   // Called on the first grain state access for a tenant in a silo,
-    //            // to initialize the options for the tenant-specific provider instance
-    //            // just before it is instantiated
-    //    )
+            configureTenantOptions: (options, tenantId) =>
+            {
+                options.ConfigureTableServiceClient(tableStorageConnectionString);
+                options.TableName = $"OrleansGrainState{tenantId}";
+            }   // Called on the first grain state access for a tenant in a silo,
+                // to initialize the options for the tenant-specific provider instance
+                // just before it is instantiated
+        )
 );
 
 // Add services to the container.
