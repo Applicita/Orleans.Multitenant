@@ -1,2 +1,2 @@
 ﻿global using System.Collections.Immutable;
-global using UserInfoResult = Orleans4Multitenant.Contracts.Result<Orleans4Multitenant.Contracts.Tenant.UserInfo>;
+global using UserResult = Orleans4Multitenant.Contracts.Result<Orleans4Multitenant.Contracts.TenantContract.User>;

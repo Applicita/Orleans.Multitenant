@@ -1,2 +1,2 @@
 ﻿global using Orleans4Multitenant.Contracts;
-global using Orleans4Multitenant.Contracts.Tenant;
+global using Orleans4Multitenant.Contracts.TenantContract;

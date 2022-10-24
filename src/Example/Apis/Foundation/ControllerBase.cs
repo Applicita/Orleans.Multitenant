@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Orleans;
+﻿using Orleans;
 using Orleans.Multitenant;
-using Orleans4Multitenant.Contracts.Tenant;
+using Orleans4Multitenant.Contracts.TenantContract;
 
 namespace Orleans4Multitenant.Apis;
 
-public abstract partial class Base : ControllerBase
+public abstract partial class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 {
     readonly IClusterClient orleans;
 
-    protected ITenant Tenant
+    protected ITenant RequestTenant
     {
         get
         {
@@ -18,5 +17,5 @@ public abstract partial class Base : ControllerBase
         }
     }
 
-    public Base(IClusterClient orleans) => this.orleans = orleans;
+    public ControllerBase(IClusterClient orleans) => this.orleans = orleans;
 }

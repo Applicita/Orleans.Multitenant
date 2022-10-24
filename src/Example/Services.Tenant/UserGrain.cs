@@ -1,14 +1,14 @@
 ﻿using Orleans;
 using Orleans.Runtime;
 
-namespace Orleans4Multitenant.Services.Tenant;
+namespace Orleans4Multitenant.Services.TenantService;
 
 // All public grain contracts for all services must be in the Contracts assembly, using a separate subnamespace for each service
 
 // All grain contracts defined in a service assembly must be internal
 
 // All interfaces and types defined in a service assembly must be non-public;
-// the public keyword is *only* used on interface member implementations and grain constructors.
+// the public keyword is *only* used on interface member implementations, grain constructors and serializable members in a type.
 // This ensures that the only external code access is Orleans instantiating grains.
 // It also makes it safe to reference the service implementation projects in the host project to let Orleans locate the grain implementations;
 // the types in the service implementation projects will not be available in the host project.
@@ -17,31 +17,31 @@ namespace Orleans4Multitenant.Services.Tenant;
 // This ensures that User grains are only created via the grains that have a public contract - i.e. the Tenant grain
 interface IUser : IGrainWithStringKey
 {
-    Task Update(UserInfo info);
-    Task<UserInfo> GetInfo();
+    Task Update(User user);
+    Task<User> Get();
 
     Task Clear();
 }
 
-sealed class User : GrainBase<User.State>, IUser
+sealed class UserGrain : GrainBase<UserGrain.State>, IUser
 {
     [GenerateSerializer]
     internal sealed class State
     {
-        [Id(0)] internal UserInfo Info { get; set; } = new(Guid.Empty, string.Empty);
+        [Id(0)] public User User { get; set; } = new(Guid.Empty, string.Empty);
     }
 
-    public User([PersistentState("state")] IPersistentState<State> state) : base(state) { }
+    public UserGrain([PersistentState("state")] IPersistentState<State> state) : base(state) { }
 
-    public async Task Update(UserInfo info)
+    public async Task Update(User user)
     {
-        ThrowIfNotEqualToKeyWithinTenant(info.Id);
+        ThrowIfNotEqualToKeyWithinTenant(user.Id);
 
-        S.Info = info;
+        S.User = user;
         await state.WriteStateAsync();
     }
 
-    public Task<UserInfo> GetInfo() => Task.FromResult(S.Info);
+    public Task<User> Get() => Task.FromResult(S.User);
 
     public Task Clear() { state.State = new(); return state.ClearStateAsync(); }
 }
