@@ -136,6 +136,9 @@ Tenant id's are stored in the key of a tenant specific `GrainId` / `StreamId`. U
 string? GetTenantId(this IAddressable grain);
 string  GetKeyWithinTenant(this IAddressable grain);
 
+string? GetTenantId(this GrainId grainId);
+string GetKeyWithinTenant(this GrainId grainId);
+
 string? GetTenantId(this StreamId streamId);
 string  GetKeyWithinTenant(this StreamId streamId);
 ```
@@ -144,6 +147,8 @@ string  GetKeyWithinTenant(this StreamId streamId);
 Note that a tenant id with value `null` means that a grain was not created with the tenant aware API's as described in this readme. This could e.g. be the case when 3rd party code is responsible for creating the grain keys.
 
 Even though the null tenant cannot be specified in the tenant aware API's, it is a valid tenant Id value in the parameters of the `ICrossTenantAuthorizer.IsAccessAuthorized` callback. This enables support for scenario's like above.
+
+To access null tenant grains just use the Orleans built-in `IGrainFactory`, and register an `ICrossTenantAuthorizer` that allows access between the null tenant and other tenants. You can also exclude specific interface namespaces from the need to be authorized by registering an `IGrainCallTenantSeparator` (see [Add multitenant communication separation](#add-multitenant-communication-separation)).
 
 The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
 
