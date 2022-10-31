@@ -153,6 +153,6 @@ To access null tenant grains, use the Orleans built-in `IGrainFactory`, and regi
 The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
 
 ### Tenant unaware streams
-To access tenant unaware streams (e.g. streams whose keys are defined by 3rd party code), use the Orleans built-in `IStreamProvider`. There is no need for a `ICrossTenantAuthorizer` to enable this access, because an `IStreamProvider` does not have the `TenantSeparatingStreamFilter` attached.
+To access tenant unaware streams (e.g. streams whose keys are defined by 3rd party code), use the Orleans built-in `IStreamProvider`. There is no need for an `ICrossTenantAuthorizer` to enable this access, because an `IStreamProvider` does not have the `TenantSeparatingStreamFilter` attached.
 
 
