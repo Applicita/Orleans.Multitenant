@@ -148,9 +148,11 @@ Note that a tenant id with value `null` means that a grain was not created with 
 
 Even though the null tenant cannot be specified in the tenant aware API's, it is a valid tenant Id value in the parameters of the `ICrossTenantAuthorizer.IsAccessAuthorized` callback. This enables support for scenario's like above.
 
-To access null tenant grains just use the Orleans built-in `IGrainFactory`, and register an `ICrossTenantAuthorizer` that allows access between the null tenant and other tenants. You can also exclude specific interface namespaces from the need to be authorized by registering an `IGrainCallTenantSeparator` (see [Add multitenant communication separation](#add-multitenant-communication-separation)).
+To access null tenant grains, use the Orleans built-in `IGrainFactory`, and register an `ICrossTenantAuthorizer` that allows access between the null tenant and other tenants. You can also exclude specific interface namespaces from the need to be authorized by registering an `IGrainCallTenantSeparator` (see [Add multitenant communication separation](#add-multitenant-communication-separation)).
 
 The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
 
+### Tenant unaware streams
+To access tenant unaware streams (e.g. streams whose keys are defined by 3rd party code), use the Orleans built-in `IStreamProvider`. There is no need for a `ICrossTenantAuthorizer` to enable this access, because a `IStreamProvider` does not have the `TenantSeparatingStreamFilter` attached.
 
 
