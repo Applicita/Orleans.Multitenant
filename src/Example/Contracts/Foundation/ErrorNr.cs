@@ -1,8 +1,7 @@
 ﻿namespace Orleans4Multitenant.Contracts;
 
-
 [Flags]
-public enum ErrorCode
+public enum ErrorNr
 {
     UserNotFound = 1,
 

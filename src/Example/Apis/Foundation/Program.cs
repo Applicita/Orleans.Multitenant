@@ -1,6 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
 using Orleans.Configuration;
-using Orleans.Hosting;
 using Orleans.Multitenant;
 using Orleans.Storage;
 using Orleans4Multitenant.Apis;

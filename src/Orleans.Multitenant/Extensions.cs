@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Orleans.Hosting;
 using Orleans.Multitenant.Internal;
 using Orleans.Providers;
 using Orleans.Runtime;

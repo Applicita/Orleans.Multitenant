@@ -1,5 +1,4 @@
-﻿using Orleans;
-using Orleans.Multitenant;
+﻿using Orleans.Multitenant;
 using Orleans4Multitenant.Contracts.TenantContract;
 
 namespace Orleans4Multitenant.Apis;

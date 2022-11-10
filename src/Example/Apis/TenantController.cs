@@ -11,7 +11,7 @@ public class TenantController : ControllerBase
     const string Users  = "users";
     const string UserId = "users/{id}";
 
-    public TenantController(Orleans.IClusterClient orleans) : base(orleans) { }
+    public TenantController(IClusterClient orleans) : base(orleans) { }
 
     /// <response code="200">The tenant has been updated</response>
     [HttpPut(Tenant)]
@@ -33,7 +33,7 @@ public class TenantController : ControllerBase
     public async Task<ActionResult<User>> CreateUser(User user)
     {
         var result = await RequestTenant.CreateUser(user);
-        return result.TryAsValidationErrors(ErrorCode.ValidationError, out var validationErrors)
+        return result.TryAsValidationErrors(ErrorNr.ValidationError, out var validationErrors)
             ? ValidationProblem(new ValidationProblemDetails(validationErrors))
             : result switch
             {
@@ -56,9 +56,9 @@ public class TenantController : ControllerBase
     public async Task<ActionResult<User>> GetUser(Guid id)
      => await RequestTenant.GetUser(id) switch
         {
-            { IsSuccess: true                   } r => Ok(r.Value),
-            { ErrorCode: ErrorCode.UserNotFound } r => NotFound(r.ErrorsText),
-            {                                   } r => throw r.UnhandledErrorException()
+            { IsSuccess: true               } r => Ok(r.Value),
+            { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
+            {                               } r => throw r.UnhandledErrorException()
         };
 
     /// <param name="id">must be equal to id in <paramref name="user"/></param>
@@ -72,9 +72,9 @@ public class TenantController : ControllerBase
      => id != user.Id ? BadRequest($"url id {id} != user id {user?.Id}") :
         await RequestTenant.UpdateUser(user) switch
         {
-            { IsSuccess: true                   } r => Ok(),
-            { ErrorCode: ErrorCode.UserNotFound } r => NotFound(r.ErrorsText),
-            {                                   } r => throw r.UnhandledErrorException()
+            { IsSuccess: true               } r => Ok(),
+            { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
+            {                               } r => throw r.UnhandledErrorException()
         };
 
     /// <response code="200">If the user has been deleted</response>
@@ -85,8 +85,8 @@ public class TenantController : ControllerBase
     public async Task<ActionResult> DeleteUser(Guid id)
      => await RequestTenant.DeleteUser(id) switch
         {
-            { IsSuccess: true                   } r => Ok(),
-            { ErrorCode: ErrorCode.UserNotFound } r => NotFound(r.ErrorsText),
-            {                                   } r => throw r.UnhandledErrorException()
+            { IsSuccess: true               } r => Ok(),
+            { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
+            {                               } r => throw r.UnhandledErrorException()
         };
 }
