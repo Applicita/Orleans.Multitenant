@@ -27,9 +27,10 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
     public MultitenantStorage(
         string name,
         MultitenantStorageOptions options,
-        ITenantGrainStorageFactory tenantGrainStorageFactory,
+        IServiceProvider serviceProvider,
         ILogger<MultitenantStorage> logger)
-     => (this.name, this.options, this.tenantGrainStorageFactory, this.logger) = (name, options, tenantGrainStorageFactory, logger);
+     => (this.name, this.options, tenantGrainStorageFactory, this.logger) = 
+        (name, options, serviceProvider.GetRequiredServiceByName<ITenantGrainStorageFactory>(name), logger);
 
     public async Task ClearStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
