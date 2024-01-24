@@ -22,13 +22,13 @@ static class SiloBuilderExtensions
 
         if (string.Equals(name, ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME, StringComparison.Ordinal))
         {
-            services.TryAddSingleton<IGrainStorage>(sp => sp.GetServiceByName<MultitenantStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
-            services.TryAddSingleton(sp => sp.GetServiceByName<ITenantGrainStorageFactory>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
+            services.TryAddSingleton<IGrainStorage>(sp => sp.GetKeyedService<MultitenantStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
+            services.TryAddSingleton(sp => sp.GetKeyedService<ITenantGrainStorageFactory>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
         }
-        return services.AddSingletonNamedService(name, MultitenantStorageFactory.Create)
-                       .AddSingletonNamedService<IGrainStorage>(name, (s, n) => s.GetRequiredServiceByName<MultitenantStorage>(n))
-                       .AddSingletonNamedService(name, (s, n) => (ILifecycleParticipant<ISiloLifecycle>)s.GetRequiredServiceByName<IGrainStorage>(n))
-                       .AddSingletonNamedService(name, factory);
+        return services.AddKeyedSingleton(name, (s, _) => MultitenantStorageFactory.Create(s, name))
+                       .AddKeyedSingleton<IGrainStorage>(name, (s, n) => s.GetRequiredKeyedService<MultitenantStorage>(n))
+                       .AddKeyedSingleton(name, (s, n) => (ILifecycleParticipant<ISiloLifecycle>)s.GetRequiredKeyedService<IGrainStorage>(n))
+                       .AddKeyedSingleton(name, (s, _) => factory(s, name));
     }
 }
 
