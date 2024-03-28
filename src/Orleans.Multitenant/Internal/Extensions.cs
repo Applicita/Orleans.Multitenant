@@ -163,7 +163,7 @@ static class GrainExtensions
 
         var sourceTenantId = grain.GetGrainId().TryGetTenantId();
 
-        if (MemoryExtensions.SequenceEqual(sourceTenantId, targetTenantId) || authorizer is null)
+        if (MemoryExtensions.SequenceEqual(sourceTenantId, targetTenantId))
             return;
 
         string? source = sourceTenantId.TenantIdString(), target = targetTenantId.TenantIdString();
