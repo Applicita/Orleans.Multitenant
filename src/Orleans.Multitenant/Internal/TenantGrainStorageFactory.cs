@@ -51,7 +51,7 @@ sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGra
         configureTenantOptions?.Invoke(options, tenantId);
 
         if (options is IStorageProviderSerializerOptions serializerOptions && serializerOptions.GrainStorageSerializer == default)
-            serializerOptions.GrainStorageSerializer = services.GetServiceByName<IGrainStorageSerializer>(name) ?? services.GetRequiredService<IGrainStorageSerializer>();
+            serializerOptions.GrainStorageSerializer = services.GetKeyedService<IGrainStorageSerializer>(name) ?? services.GetRequiredService<IGrainStorageSerializer>();
 
         var validator = ActivatorUtilities.CreateInstance<TGrainStorageOptionsValidator>(services, options, tenantProviderName);
         validator.ValidateConfiguration();
