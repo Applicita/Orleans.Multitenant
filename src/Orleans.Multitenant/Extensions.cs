@@ -99,7 +99,10 @@ public static class SiloBuilderExtensions
         this ISiloBuilder builder,
         string name,
         Func<ISiloBuilder, string, ISiloBuilder> addStreamProvider)
-    => addStreamProvider(builder, name).AddStreamFilter<TenantSeparatingStreamFilter>(name);
+    {
+        ArgumentNullException.ThrowIfNull(addStreamProvider);
+        return addStreamProvider(builder, name).AddStreamFilter<TenantSeparatingStreamFilter>(name);
+    }
 }
 
 public static class ServiceCollectionExtensions
@@ -160,10 +163,13 @@ public static class ServiceCollectionExtensions
         where TGrainStorage : IGrainStorage
         where TGrainStorageOptions : class, new()
         where TGrainStorageOptionsValidator : class, IConfigurationValidator
-    => addStorageProvider(services, name).AddMultitenantGrainStorage(
-            name,
-            (services, name) => TenantGrainStorageFactoryFactory.Create<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(services, name, configureTenantOptions),
-            configureOptions);
+    {
+        ArgumentNullException.ThrowIfNull(addStorageProvider);
+        return addStorageProvider(services, name).AddMultitenantGrainStorage(
+                name,
+                (services, name) => TenantGrainStorageFactoryFactory.Create<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(services, name, configureTenantOptions),
+                configureOptions);
+    }
 }
 
 public static class GrainExtensions
