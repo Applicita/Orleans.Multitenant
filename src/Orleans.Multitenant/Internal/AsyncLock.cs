@@ -90,7 +90,8 @@ sealed class AsyncLock
             var tmp = target;
             target = null;
             try { _ = tmp.semaphore.Release(); }
-            catch (Exception) { } // just ignore the Exception
+            catch (ObjectDisposedException) { } // just ignore the Exception
+            catch (SemaphoreFullException) { } // just ignore the Exception
         }
     }
 }
