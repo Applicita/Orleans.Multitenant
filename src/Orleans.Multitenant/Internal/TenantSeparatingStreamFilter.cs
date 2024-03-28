@@ -6,6 +6,7 @@ namespace Orleans.Multitenant.Internal;
 
 interface ITenantEvent { }
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class TenantSeparatingStreamFilter : IStreamFilter
 {
     readonly ILogger logger;

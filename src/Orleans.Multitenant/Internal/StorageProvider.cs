@@ -7,6 +7,7 @@ using Orleans.Storage;
 
 namespace Orleans.Multitenant.Internal;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
 {
     readonly string name;
