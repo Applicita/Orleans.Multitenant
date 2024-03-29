@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Orleans4Multitenant.Contracts;
 
+#pragma warning disable CA2225 // Operator overloads have named alternates. Rationale: Not needed for use in C# only
 /// <summary>
 /// Result without value; use to return either <see cref="Ok"/> or <see cref="ResultBase{ErrorNr}.Error"/>(s)
 /// </summary>
@@ -145,3 +146,4 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
         public static implicit operator Error((TErrorNr nr, string message) error) => new(error.nr, error.message);
     }
 }
+#pragma warning restore CA2225 // Operator overloads have named alternates
