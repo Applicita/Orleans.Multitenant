@@ -8,6 +8,7 @@ namespace Orleans.Multitenant;
 /// In a <see cref="IAddressable"/> context (e.g. a <see cref="Grain"/>) use the <see cref="AddressableExtensions"/> methods to instantiate;<br />
 /// In other contexts (e.g. an <see cref="IClusterClient"/>) use the <see cref="GrainFactoryExtensions"/> methods to instantiate
 /// </remarks>
+[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Instances of the value type will not be compared to each other")]
 public readonly struct TenantGrainFactory
 {
     internal readonly IGrainFactory factory;

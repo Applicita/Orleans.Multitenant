@@ -9,6 +9,7 @@ namespace Orleans.Multitenant;
 /// In a <see cref="Grain"/> context use the <see cref="GrainExtensions"/> methods to instantiate;<br />
 /// In a <see cref="IClusterClient"/> context use the <see cref="ClusterClientExtensions"/> methods to instantiate
 /// </remarks>
+[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Instances of the value type will not be compared to each other")]
 public readonly struct TenantStreamProvider
 {
     readonly IStreamProvider provider;
@@ -51,7 +52,7 @@ public readonly struct TenantStreamProvider
 }
 
 /// <summary>A tenant-specific <see cref="IAsyncStream{T}"/> equivalent, offering all the <see cref="IAsyncStream{T}"/> methods plus all <see cref="AsyncObservableExtensions"/> extension methods</summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Is a stream")]
+[SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Is a stream")]
 public readonly record struct TenantStream<T> : IComparable<TenantStream<T>>
 {
     static readonly Func<Exception, Task> defaultOnError = _ => Task.CompletedTask;
@@ -170,6 +171,7 @@ public readonly record struct TenantStream<T> : IComparable<TenantStream<T>>
 /// <remarks>Note that this wrapper does not add any data to <typeparamref name="T"/>; it only marks <typeparamref name="T"/> with an internal interface,
 /// which is used by the stream filter to guard tenant separation - the filter block events sent with a tenant unaware API through a tenant specific stream</remarks>
 [GenerateSerializer]
+[SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Instances of the value type will not be compared to each other")]
 public readonly struct TenantEvent<T> : ITenantEvent
 {
     [Id(0)] internal T Event { get; init; }
