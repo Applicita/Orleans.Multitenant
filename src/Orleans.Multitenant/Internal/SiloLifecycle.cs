@@ -36,7 +36,7 @@ sealed class SiloLifecycleRepeater : IRepeatedSiloLifecycleObservable
     readonly ISiloLifecycle realSiloLifecycle;
     readonly ILogger<MultitenantStorage> logger;
     readonly int highestCompletedStageOnParticipate, lowestStoppedStageOnParticipate;
-    readonly List<LifecycleStartEventRecord> startupRecording = new();
+    readonly List<LifecycleStartEventRecord> startupRecording = [];
 
     internal SiloLifecycleRepeater(ISiloLifecycle realSiloLifecycleOnParticipate, ILogger<MultitenantStorage> logger)
     {
@@ -51,7 +51,7 @@ sealed class SiloLifecycleRepeater : IRepeatedSiloLifecycleObservable
 
     public void SubscribeStopEvents(IRepeatedSiloLifecycleObserver observer) => onStopObservers.Add(observer);
 
-    readonly ConcurrentBag<IRepeatedSiloLifecycleObserver> onStopObservers = new();
+    readonly ConcurrentBag<IRepeatedSiloLifecycleObserver> onStopObservers = [];
 
     void SubscribeToAllServiceLifeCycleStages()
     {
@@ -84,7 +84,7 @@ sealed class SiloLifecycleSimulator : ISiloLifecycle, IRepeatedSiloLifecycleObse
 {
     readonly ILogger<MultitenantStorage> logger;
     readonly LifecycleStartupRecording startHistory;
-    readonly List<Subscription> subscriptions = new();
+    readonly List<Subscription> subscriptions = [];
     bool stopping;
 
     internal SiloLifecycleSimulator(IRepeatedSiloLifecycleObservable lifecycle, ILogger<MultitenantStorage> logger)
