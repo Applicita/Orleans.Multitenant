@@ -2,6 +2,7 @@
 // Updated: 2022-11-10
 // See https://github.com/Applicita/Orleans.Results for updates to this file.
 
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Orleans4Multitenant.Contracts;
@@ -22,7 +23,7 @@ public class Result : ResultBase<ErrorNr>
     public static implicit operator Result(Error error) => new(error);
     public static implicit operator Result(ErrorNr nr) => new(nr);
     public static implicit operator Result((ErrorNr nr, string message) error) => new(error);
-    public static implicit operator Result(List<Error> errors) => new(errors);
+    public static implicit operator Result(Collection<Error> errors) => new(errors);
 }
 
 /// <summary>
@@ -40,7 +41,7 @@ public class Result<TValue> : ResultBase<ErrorNr, TValue>
     public static implicit operator Result<TValue>(Error error) => new(error);
     public static implicit operator Result<TValue>(ErrorNr nr) => new(nr);
     public static implicit operator Result<TValue>((ErrorNr nr, string message) error) => new(error);
-    public static implicit operator Result<TValue>(List<Error> errors) => new(errors);
+    public static implicit operator Result<TValue>(Collection<Error> errors) => new(errors);
 }
 
 [GenerateSerializer]
