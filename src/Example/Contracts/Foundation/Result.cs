@@ -2,10 +2,12 @@
 // Updated: 2022-11-10
 // See https://github.com/Applicita/Orleans.Results for updates to this file.
 
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Orleans4Multitenant.Contracts;
 
+#pragma warning disable CA2225 // Operator overloads have named alternates. Rationale: Not needed for use in C# only
 /// <summary>
 /// Result without value; use to return either <see cref="Ok"/> or <see cref="ResultBase{ErrorNr}.Error"/>(s)
 /// </summary>
@@ -22,7 +24,7 @@ public class Result : ResultBase<ErrorNr>
     public static implicit operator Result(Error error) => new(error);
     public static implicit operator Result(ErrorNr nr) => new(nr);
     public static implicit operator Result((ErrorNr nr, string message) error) => new(error);
-    public static implicit operator Result(List<Error> errors) => new(errors);
+    public static implicit operator Result(Collection<Error> errors) => new(errors);
 }
 
 /// <summary>
@@ -40,10 +42,11 @@ public class Result<TValue> : ResultBase<ErrorNr, TValue>
     public static implicit operator Result<TValue>(Error error) => new(error);
     public static implicit operator Result<TValue>(ErrorNr nr) => new(nr);
     public static implicit operator Result<TValue>((ErrorNr nr, string message) error) => new(error);
-    public static implicit operator Result<TValue>(List<Error> errors) => new(errors);
+    public static implicit operator Result<TValue>(Collection<Error> errors) => new(errors);
 }
 
 [GenerateSerializer]
+[SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "<Pending>")]
 public abstract class ResultBase<TErrorNr, TValue> : ResultBase<TErrorNr> where TErrorNr : Enum
 {
     [Id(0)] TValue? value;
@@ -81,6 +84,7 @@ public abstract class ResultBase<TErrorNr, TValue> : ResultBase<TErrorNr> where 
 }
 
 [GenerateSerializer]
+[SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "Changing type name(space) would break Orleans serialization compatibility")]
 public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
 {
     public bool IsSuccess => !IsFailed;
@@ -111,14 +115,14 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
     /// <param name="validationErrorFlag">The enum flag used to identify an error as a validation error</param>
     /// <param name="validationErrors">If the return value is true, receives all errors in a dictionary suitable for serializing into a https://tools.ietf.org/html/rfc7807 based format; otherwise set to null</param>
     /// <returns>True for a failed result that has the <paramref name="validationErrorFlag"/> set in the <typeparamref name="TErrorNr"/> for <b>all</b> errors; false otherwise</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link works independently of global usings")]
+    [SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link works independently of global usings")]
     public bool TryAsValidationErrors(TErrorNr validationErrorFlag, [NotNullWhen(true)] out Dictionary<string, string[]>? validationErrors)
     {
         if (IsFailed && Errors.All(error => error.Nr.HasFlag(validationErrorFlag)))
         {
             validationErrors = new(Errors
                 .GroupBy(error => error.Nr, error => error.Message)
-                .Select(group => new KeyValuePair<string, string[]>(group.Key.ToString(), group.ToArray())));
+                .Select(group => new KeyValuePair<string, string[]>(group.Key.ToString(), [.. group])));
             return true;
         }
         validationErrors = null;
@@ -135,9 +139,11 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
     public NotImplementedException UnhandledErrorException(string? message = null) => new($"{message}Unhandled error(s): " + ErrorsText);
 
     [GenerateSerializer, Immutable]
+    [SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "Changing type name(space) would break Orleans serialization compatibility")]
     public record Error([property: Id(0)] TErrorNr Nr, [property: Id(1)] string Message = "")
     {
         public static implicit operator Error(TErrorNr nr) => new(nr);
         public static implicit operator Error((TErrorNr nr, string message) error) => new(error.nr, error.message);
     }
 }
+#pragma warning restore CA2225 // Operator overloads have named alternates

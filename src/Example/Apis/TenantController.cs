@@ -5,13 +5,11 @@ using Orleans4Multitenant.Contracts.TenantContract;
 namespace Orleans4Multitenant.Apis.TenantApi;
 
 [ApiController]
-public class TenantController : ControllerBase
+public class TenantController(IClusterClient orleans) : ControllerBase(orleans)
 {
     const string Tenant   = "tenant";
     const string Users  = "users";
     const string UserId = "users/{id}";
-
-    public TenantController(IClusterClient orleans) : base(orleans) { }
 
     /// <response code="200">The tenant has been updated</response>
     [HttpPut(Tenant)]
@@ -72,7 +70,7 @@ public class TenantController : ControllerBase
      => id != user.Id ? BadRequest($"url id {id} != user id {user?.Id}") :
         await RequestTenant.UpdateUser(user) switch
         {
-            { IsSuccess: true               } r => Ok(),
+            { IsSuccess: true               }   => Ok(),
             { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
             {                               } r => throw r.UnhandledErrorException()
         };
@@ -85,7 +83,7 @@ public class TenantController : ControllerBase
     public async Task<ActionResult> DeleteUser(Guid id)
      => await RequestTenant.DeleteUser(id) switch
         {
-            { IsSuccess: true               } r => Ok(),
+            { IsSuccess: true               }   => Ok(),
             { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
             {                               } r => throw r.UnhandledErrorException()
         };

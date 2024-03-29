@@ -23,15 +23,13 @@ interface IUser : IGrainWithStringKey
     Task Clear();
 }
 
-sealed class UserGrain : GrainBase<UserGrain.State>, IUser
+sealed class UserGrain([PersistentState("state")] IPersistentState<UserGrain.State> state) : GrainBase<UserGrain.State>(state), IUser
 {
     [GenerateSerializer]
     internal sealed class State
     {
         [Id(0)] public User User { get; set; } = new(Guid.Empty, string.Empty);
     }
-
-    public UserGrain([PersistentState("state")] IPersistentState<State> state) : base(state) { }
 
     public async Task Update(User user)
     {

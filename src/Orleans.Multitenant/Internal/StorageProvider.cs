@@ -7,6 +7,7 @@ using Orleans.Storage;
 
 namespace Orleans.Multitenant.Internal;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLifecycle>
 {
     readonly string name;
@@ -30,24 +31,24 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
         IServiceProvider serviceProvider,
         ILogger<MultitenantStorage> logger)
      => (this.name, this.options, tenantGrainStorageFactory, this.logger) = 
-        (name, options, serviceProvider.GetRequiredServiceByName<ITenantGrainStorageFactory>(name), logger);
+        (name, options, serviceProvider.GetRequiredKeyedService<ITenantGrainStorageFactory>(name), logger);
 
     public async Task ClearStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainId);
-        await provider.ClearStateAsync(grainType, grainId, grainState);
+        var provider = await GetTenantStorageProvider(grainId).ConfigureAwait(false);
+        await provider.ClearStateAsync(grainType, grainId, grainState).ConfigureAwait(false);
     }
 
     public async Task ReadStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainId);
-        await provider.ReadStateAsync(grainType, grainId, grainState);
+        var provider = await GetTenantStorageProvider(grainId).ConfigureAwait(false);
+        await provider.ReadStateAsync(grainType, grainId, grainState).ConfigureAwait(false);
     }
 
     public async Task WriteStateAsync<T>(string grainType, GrainId grainId, IGrainState<T> grainState)
     {
-        var provider = await GetTenantStorageProvider(grainId);
-        await provider.WriteStateAsync(grainType, grainId, grainState);
+        var provider = await GetTenantStorageProvider(grainId).ConfigureAwait(false);
+        await provider.WriteStateAsync(grainType, grainId, grainState).ConfigureAwait(false);
     }
 
     public void Participate(ISiloLifecycle observer)
@@ -63,7 +64,7 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
         if (!tenantStorageProviders.TryGetValue(tenantId, out var grainStorage))
         {
             var createTenantStorageProviderLock = createTenantStorageProviderLocks.GetOrAdd(tenantId, _ => new AsyncLock());
-            using (await createTenantStorageProviderLock.LockAsync())
+            using (await createTenantStorageProviderLock.LockAsync().ConfigureAwait(false))
             {
                 if (!tenantStorageProviders.TryGetValue(tenantId, out grainStorage))
                 {
@@ -78,9 +79,9 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
                         participant.Participate(simulator); // Subscriptions to the simulator are registered here
 
                         logger.StartingTenantProvider(tenantId, options.TenantStorageProviderInitTimeout.TotalSeconds);
-                        var cts = new CancellationTokenSource();
+                        using var cts = new CancellationTokenSource();
                         cts.CancelAfter(options.TenantStorageProviderInitTimeout);
-                        await simulator.ReplayOnStartHistory(cts.Token); // Invokes any subscriptions registered on the simulator
+                        await simulator.ReplayOnStartHistory(cts.Token).ConfigureAwait(false); // Invokes any subscriptions registered on the simulator
                                                                          // Before a storage provider is fully started by Orleans, it is not accessed for grain state
                                                                          // So we treat the first grain access for a tenant as the point where the start recording is completed, and replay it.
                         logger.StartedTenantProvider(tenantId);
@@ -96,17 +97,8 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
     }
 }
 
-sealed class MultitenantStorageOptionsValidator : IConfigurationValidator
+sealed class MultitenantStorageOptionsValidator(MultitenantStorageOptions options, string name) : IConfigurationValidator
 {
-    readonly MultitenantStorageOptions options;
-    readonly string name;
-
-    public MultitenantStorageOptionsValidator(MultitenantStorageOptions options, string name)
-    {
-        this.options = options;
-        this.name = name;
-    }
-
     public void ValidateConfiguration()
     {
         double timeout = options.TenantStorageProviderInitTimeout.TotalSeconds;

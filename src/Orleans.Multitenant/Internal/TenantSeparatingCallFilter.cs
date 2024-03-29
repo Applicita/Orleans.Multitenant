@@ -2,17 +2,9 @@
 
 namespace Orleans.Multitenant.Internal;
 
-sealed class TenantSeparatingCallFilter : IIncomingGrainCallFilter
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
+sealed class TenantSeparatingCallFilter(IGrainCallTenantSeparator separator, ICrossTenantAuthorizer authorizer) : IIncomingGrainCallFilter
 {
-    readonly IGrainCallTenantSeparator separator;
-    readonly ICrossTenantAuthorizer authorizer;
-
-    public TenantSeparatingCallFilter(IGrainCallTenantSeparator separator, ICrossTenantAuthorizer authorizer)
-    {
-        this.separator = separator;
-        this.authorizer = authorizer;
-    }
-
     public Task Invoke(IIncomingGrainCallContext context)
     {
         if (separator.IsTenantSeparatedCall(context))

@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AnalysisLevel>preview-All</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>b883d5d6-32c5-4426-934b-b68c47fc7691</UserSecretsId>
+    <NoWarn>$(NoWarn);ORLEANS0010;CA1062;IDE0005</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -16,11 +17,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="7.1.2" />
-    <PackageReference Include="Orleans.Multitenant" Version="1.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="8.0.0" />
+    <PackageReference Include="Orleans.Multitenant" Version="2.0.0-preview.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 

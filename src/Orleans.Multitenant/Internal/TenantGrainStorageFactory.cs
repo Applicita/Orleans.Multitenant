@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Orleans.Runtime;
 using Orleans.Storage;
 
 namespace Orleans.Multitenant.Internal;
@@ -16,6 +15,7 @@ static class TenantGrainStorageFactoryFactory
             ActivatorUtilities.CreateInstance<TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>>(services, name, configureTenantOptions);
 }
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator> : ITenantGrainStorageFactory
     where TGrainStorage : IGrainStorage
     where TGrainStorageOptions : class, new()
@@ -43,7 +43,7 @@ sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGra
 
     public IGrainStorage Create(string tenantId)
     {
-        string tenantProviderName = tenantId == string.Empty ? name : $"{tenantId}_{name}";
+        string tenantProviderName = string.IsNullOrEmpty(tenantId) ? name : $"{tenantId}_{name}";
         logger.CreatingTenantProvider(typeof(TGrainStorage), tenantId, tenantProviderName);
 
         var options = ActivatorUtilities.CreateInstance<TGrainStorageOptions>(services);
@@ -51,7 +51,7 @@ sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGra
         configureTenantOptions?.Invoke(options, tenantId);
 
         if (options is IStorageProviderSerializerOptions serializerOptions && serializerOptions.GrainStorageSerializer == default)
-            serializerOptions.GrainStorageSerializer = services.GetServiceByName<IGrainStorageSerializer>(name) ?? services.GetRequiredService<IGrainStorageSerializer>();
+            serializerOptions.GrainStorageSerializer = services.GetKeyedService<IGrainStorageSerializer>(name) ?? services.GetRequiredService<IGrainStorageSerializer>();
 
         var validator = ActivatorUtilities.CreateInstance<TGrainStorageOptionsValidator>(services, options, tenantProviderName);
         validator.ValidateConfiguration();

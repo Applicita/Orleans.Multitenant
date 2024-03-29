@@ -3,18 +3,16 @@
 namespace OrleansMultitenant.Tests.UnitTests;
 
 [Collection(MultiPurposeCluster.Name)]
-public class GrainCallingTests
+public class GrainCallingTests(ClusterFixture fixture)
 {
-    public static IEnumerable<object?[]> UnauthorizedTenantScenarios() => new object?[][] {
+    public static IEnumerable<object?[]> UnauthorizedTenantScenarios() => [
         //              scenarioId, sourceTenant, targetTenant
-        new object?[] {        "1",    "TenantA",    "TenantB" },
-        new object?[] {        "2",    "TenantA",         null },
-        new object?[] {        "3",         null,    "TenantB" }
-    };
+        ["1",    "TenantA",    "TenantB"],
+        ["2",    "TenantA",         null],
+        ["3",         null,    "TenantB"]
+    ];
 
-    readonly Orleans.TestingHost.TestCluster cluster;
-
-    public GrainCallingTests(ClusterFixture fixture) => cluster = fixture.Cluster;
+    readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
     [Fact]
     public async Task CallFilter_GrainCallWithinNonNullTenant_Succeeds()

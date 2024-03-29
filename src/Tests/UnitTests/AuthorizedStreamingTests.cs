@@ -5,28 +5,20 @@ using OrleansMultitenant.Tests.Examples.AuthorizedStreaming;
 namespace OrleansMultitenant.Tests.UnitTests;
 
 [Collection(MultiPurposeCluster.Name)]
-public class AuthorizedStreamingTests
+public class AuthorizedStreamingTests(ClusterFixture fixture)
 {
     string? tenantId;
     int tenantValueOffset;
     bool tenantAware;
 
-    readonly Orleans.TestingHost.TestCluster cluster;
+    readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
-    public static IEnumerable<object?[]> TenantScenarios() => new object?[][] {
+    public static IEnumerable<object?[]> TenantScenarios() => [
         //              scenarioId,  tenantId, tenantValueOffset, tenantAware
-        new object?[] {        "1",      null,                 0,       false }, // Verify that common streaming scenario's work with the (tenant-unaware) built-in Orleans API's
-        new object?[] {        "2", "TenantA",           100_000,        true }, // Verify that common streaming scenario's work with a tenant that has a non-empty tenant ID
-        new object?[] {        "3",        "",           200_000,        true }, // Verify that common streaming scenario's work with a tenant that has an empty tenant ID
-    };
-
-    public AuthorizedStreamingTests(ClusterFixture fixture)
-    {
-        cluster = fixture.Cluster;
-        tenantId = null;
-        tenantValueOffset = 0;
-        tenantAware = false;
-    }
+        ["1",      null,                 0,       false], // Verify that common streaming scenario's work with the (tenant-unaware) built-in Orleans API's
+        ["2", "TenantA",           100_000,        true], // Verify that common streaming scenario's work with a tenant that has a non-empty tenant ID
+        ["3",        "",           200_000,        true], // Verify that common streaming scenario's work with a tenant that has an empty tenant ID
+    ];
 
     [Theory]
     [MemberData(nameof(TenantScenarios))]

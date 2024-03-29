@@ -3,14 +3,15 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Orleans4Multitenant.Apis;
 
-public class TenantHeader
+public static class TenantHeader
 {
     public const string Name = "tenant";
 
-    public class AddAsOpenApiParameter : IOperationFilter
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Instantiated late-bound")]
+    internal sealed class AddAsOpenApiParameter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
-         => (operation.Parameters ??= new List<OpenApiParameter>()).Add(new OpenApiParameter
+         => (operation.Parameters ??= []).Add(new OpenApiParameter
          {
              Name = Name,
              In = ParameterLocation.Header,
