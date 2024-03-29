@@ -97,17 +97,8 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
     }
 }
 
-sealed class MultitenantStorageOptionsValidator : IConfigurationValidator
+sealed class MultitenantStorageOptionsValidator(MultitenantStorageOptions options, string name) : IConfigurationValidator
 {
-    readonly MultitenantStorageOptions options;
-    readonly string name;
-
-    public MultitenantStorageOptionsValidator(MultitenantStorageOptions options, string name)
-    {
-        this.options = options;
-        this.name = name;
-    }
-
     public void ValidateConfiguration()
     {
         double timeout = options.TenantStorageProviderInitTimeout.TotalSeconds;

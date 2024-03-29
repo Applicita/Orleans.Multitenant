@@ -3,9 +3,9 @@
 namespace OrleansMultitenant.Tests.UnitTests;
 
 [Collection(MultiPurposeCluster.Name)]
-public class TenantIdTests
+public class TenantIdTests(ClusterFixture fixture)
 {
-    readonly Orleans.TestingHost.TestCluster cluster;
+    readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
     public static IEnumerable<object?[]> TenantKeyQualifiedKeys() => new object?[][] {
         new object?[] { ""       , ""      , "|"             },
@@ -21,8 +21,6 @@ public class TenantIdTests
         new object?[] { "D"      , "~Key7" , "D|~~Key7"      },
         new object?[] { "E"      , "|~Key8", "E|~|~Key8"     }
     };
-
-    public TenantIdTests(ClusterFixture fixture) => cluster = fixture.Cluster;
 
     [Theory]
     [MemberData(nameof(TenantKeyQualifiedKeys))]

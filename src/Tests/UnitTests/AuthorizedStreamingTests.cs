@@ -5,13 +5,13 @@ using OrleansMultitenant.Tests.Examples.AuthorizedStreaming;
 namespace OrleansMultitenant.Tests.UnitTests;
 
 [Collection(MultiPurposeCluster.Name)]
-public class AuthorizedStreamingTests
+public class AuthorizedStreamingTests(ClusterFixture fixture)
 {
-    string? tenantId;
-    int tenantValueOffset;
-    bool tenantAware;
+    string? tenantId = null;
+    int tenantValueOffset = 0;
+    bool tenantAware = false;
 
-    readonly Orleans.TestingHost.TestCluster cluster;
+    readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
     public static IEnumerable<object?[]> TenantScenarios() => new object?[][] {
         //              scenarioId,  tenantId, tenantValueOffset, tenantAware
@@ -19,14 +19,6 @@ public class AuthorizedStreamingTests
         new object?[] {        "2", "TenantA",           100_000,        true }, // Verify that common streaming scenario's work with a tenant that has a non-empty tenant ID
         new object?[] {        "3",        "",           200_000,        true }, // Verify that common streaming scenario's work with a tenant that has an empty tenant ID
     };
-
-    public AuthorizedStreamingTests(ClusterFixture fixture)
-    {
-        cluster = fixture.Cluster;
-        tenantId = null;
-        tenantValueOffset = 0;
-        tenantAware = false;
-    }
 
     [Theory]
     [MemberData(nameof(TenantScenarios))]

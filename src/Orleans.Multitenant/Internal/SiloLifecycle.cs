@@ -152,16 +152,10 @@ sealed class SiloLifecycleSimulator : ISiloLifecycle, IRepeatedSiloLifecycleObse
         }
     }
 
-    sealed class Subscription : IDisposable
+    sealed class Subscription(int stage, ILifecycleObserver observer) : IDisposable
     {
-        public int Stage { get; }
-        public ILifecycleObserver Observer { get; }
-
-        public Subscription(int stage, ILifecycleObserver observer)
-        {
-            Stage = stage;
-            Observer = observer;
-        }
+        public int Stage { get; } = stage;
+        public ILifecycleObserver Observer { get; } = observer;
 
         public void Dispose() { }
     }

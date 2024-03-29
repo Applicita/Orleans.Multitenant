@@ -4,12 +4,10 @@ using Orleans.Runtime;
 
 namespace Orleans4Multitenant.Services;
 
-abstract class GrainBase<T> : GrainBase
+abstract class GrainBase<T>(IPersistentState<T> state) : GrainBase
 {
-    protected readonly IPersistentState<T> state;
+    protected readonly IPersistentState<T> state = state;
     protected T S => state.State;
-
-    protected GrainBase(IPersistentState<T> state) => this.state = state;
 }
 
 abstract class GrainBase : Grain

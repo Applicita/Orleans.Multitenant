@@ -3,9 +3,9 @@
 namespace OrleansMultitenant.Tests.UnitTests;
 
 [Collection(MultiPurposeCluster.Name)]
-public class UnauthorizedStreamingTests
+public class UnauthorizedStreamingTests(ClusterFixture fixture)
 {
-    readonly Orleans.TestingHost.TestCluster cluster;
+    readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
     public static IEnumerable<object?[]> TenantScenarios() => new object?[][] {
         //              scenarioId, providerIsTenantAware, streamTenant, producerTenant, subscriberTenant
@@ -16,8 +16,6 @@ public class UnauthorizedStreamingTests
         new object?[] {        "5",                 false,    "TenantA",      "TenantA",        "TenantB" },
         new object?[] {        "6",                 false,    "TenantA",      "TenantB",        "TenantA" },
     };
-
-    public UnauthorizedStreamingTests(ClusterFixture fixture) => cluster = fixture.Cluster;
 
     [Theory]
     [MemberData(nameof(TenantScenarios))]

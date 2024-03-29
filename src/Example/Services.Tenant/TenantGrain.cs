@@ -3,7 +3,7 @@ using Orleans.Runtime;
 
 namespace Orleans4Multitenant.Services.TenantService;
 
-sealed class TenantGrain : GrainBase<TenantGrain.State>, ITenant
+sealed class TenantGrain([PersistentState("state")] IPersistentState<TenantGrain.State> state) : GrainBase<TenantGrain.State>(state), ITenant
 {
     [GenerateSerializer]
     internal sealed class State
@@ -11,8 +11,6 @@ sealed class TenantGrain : GrainBase<TenantGrain.State>, ITenant
         [Id(0)] public Tenant Tenant { get; set; } = new(string.Empty);
         [Id(1)] public Dictionary<Guid, User> Users { get; set; } = [];
     }
-
-    public TenantGrain([PersistentState("state")] IPersistentState<State> state) : base(state) { }
 
     public Task<Tenant> Get() => Task.FromResult(S.Tenant);
 

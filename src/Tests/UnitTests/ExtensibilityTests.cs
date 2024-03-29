@@ -8,11 +8,9 @@ using OrleansMultitenant.Tests.Examples.Extensibility;
 
 namespace OrleansMultitenant.Tests.UnitTests;
 
-public sealed class ExtensibilityTests : IClassFixture<ExtensibilityTests.ClusterFixture>
+public sealed class ExtensibilityTests(ExtensibilityTests.ClusterFixture fixture) : IClassFixture<ExtensibilityTests.ClusterFixture>
 {
-    readonly TestCluster cluster;
-
-    public ExtensibilityTests(ClusterFixture fixture) => cluster = fixture.Cluster;
+    readonly TestCluster cluster = fixture.Cluster;
 
     [Fact]
     public async Task ExtendedCrossTenantAccessAuthorizer_ForGrainCallWithinTenant_IsNotInvoked()

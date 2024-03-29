@@ -5,13 +5,11 @@ using Orleans4Multitenant.Contracts.TenantContract;
 namespace Orleans4Multitenant.Apis.TenantApi;
 
 [ApiController]
-public class TenantController : ControllerBase
+public class TenantController(IClusterClient orleans) : ControllerBase(orleans)
 {
     const string Tenant   = "tenant";
     const string Users  = "users";
     const string UserId = "users/{id}";
-
-    public TenantController(IClusterClient orleans) : base(orleans) { }
 
     /// <response code="200">The tenant has been updated</response>
     [HttpPut(Tenant)]
