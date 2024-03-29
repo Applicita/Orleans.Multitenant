@@ -29,7 +29,7 @@ public class UnauthorizedStreamingTests(ClusterFixture fixture)
 
         if (subscriberTenant != streamTenant)
         {
-            _ = Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+            _ = await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
                 subscriber.Subscribe(provider, "Stream2Namespace", streamTenant, ThisTestMethodId(scenarioId)));
             return;
         }
@@ -37,7 +37,7 @@ public class UnauthorizedStreamingTests(ClusterFixture fixture)
 
         if (producerTenant != streamTenant)
         {
-            _ = Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+            _ = await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
                 producer.ProduceEvent(provider, "Stream2Namespace", streamTenant, ThisTestMethodId(scenarioId), 31415));
             return;
         }
