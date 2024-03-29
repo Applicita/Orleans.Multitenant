@@ -7,9 +7,9 @@ namespace OrleansMultitenant.Tests.UnitTests;
 [Collection(MultiPurposeCluster.Name)]
 public class AuthorizedStreamingTests(ClusterFixture fixture)
 {
-    string? tenantId = null;
-    int tenantValueOffset = 0;
-    bool tenantAware = false;
+    string? tenantId;
+    int tenantValueOffset;
+    bool tenantAware;
 
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
