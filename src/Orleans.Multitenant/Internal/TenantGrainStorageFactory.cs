@@ -44,7 +44,7 @@ sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGra
 
     public IGrainStorage Create(string tenantId)
     {
-        string tenantProviderName = tenantId == string.Empty ? name : $"{tenantId}_{name}";
+        string tenantProviderName = string.IsNullOrEmpty(tenantId) ? name : $"{tenantId}_{name}";
         logger.CreatingTenantProvider(typeof(TGrainStorage), tenantId, tenantProviderName);
 
         var options = ActivatorUtilities.CreateInstance<TGrainStorageOptions>(services);
