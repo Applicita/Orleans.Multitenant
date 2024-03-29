@@ -7,20 +7,20 @@ public class TenantIdTests(ClusterFixture fixture)
 {
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
-    public static IEnumerable<object?[]> TenantKeyQualifiedKeys() => new object?[][] {
-        new object?[] { ""       , ""      , "|"             },
-        new object?[] { ""       , "2"     , "|2"            },
-        new object?[] { ""       , "Key3"  , "|Key3"         },
-        new object?[] { "A"      , ""      , "A|"            },
-        new object?[] { "A"      , "1"     , "A|1"           },
-        new object?[] { "TenantB", "Key2"  , "TenantB|Key2"  },
-        new object?[] { "Te|antB", "Key2"  , "Te||antB|Key2" },
-        new object?[] { "|"      , "Key4"  , "|||Key4"       },
-        new object?[] { "||"     , "Key5"  , "|||||Key5"     },
-        new object?[] { "C"      , "|Key6" , "C|~|Key6"      },
-        new object?[] { "D"      , "~Key7" , "D|~~Key7"      },
-        new object?[] { "E"      , "|~Key8", "E|~|~Key8"     }
-    };
+    public static IEnumerable<object?[]> TenantKeyQualifiedKeys() => [
+        [""       , ""      , "|"],
+        [""       , "2"     , "|2"],
+        [""       , "Key3"  , "|Key3"],
+        ["A"      , ""      , "A|"],
+        ["A"      , "1"     , "A|1"],
+        ["TenantB", "Key2"  , "TenantB|Key2"],
+        ["Te|antB", "Key2"  , "Te||antB|Key2"],
+        ["|"      , "Key4"  , "|||Key4"],
+        ["||"     , "Key5"  , "|||||Key5"],
+        ["C"      , "|Key6" , "C|~|Key6"],
+        ["D"      , "~Key7" , "D|~~Key7"],
+        ["E"      , "|~Key8", "E|~|~Key8"]
+    ];
 
     [Theory]
     [MemberData(nameof(TenantKeyQualifiedKeys))]

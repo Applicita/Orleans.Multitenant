@@ -12,7 +12,7 @@ sealed class TestingUtils
     internal static async Task WaitUntilAsync(Func<bool, Task<bool>> predicate, TimeSpan timeout, TimeSpan? delayOnFail = null)
     {
         delayOnFail ??= TimeSpan.FromSeconds(1);
-        bool[] keepGoing = new[] { true };
+        bool[] keepGoing = [true];
 
         var task = loop();
         try

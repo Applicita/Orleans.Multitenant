@@ -122,7 +122,7 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
         {
             validationErrors = new(Errors
                 .GroupBy(error => error.Nr, error => error.Message)
-                .Select(group => new KeyValuePair<string, string[]>(group.Key.ToString(), group.ToArray())));
+                .Select(group => new KeyValuePair<string, string[]>(group.Key.ToString(), [.. group])));
             return true;
         }
         validationErrors = null;
