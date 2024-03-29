@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "<Pending>", Scope = "member", Target = "~N:Orleans4Multitenant.Apis")]
+[assembly: SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Type is for tool access only", Scope = "type", Target = "~T:Orleans4Multitenant.Apis.TenantApi.TenantController")]
