@@ -22,8 +22,8 @@ static class SiloBuilderExtensions
 
         if (string.Equals(name, ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME, StringComparison.Ordinal))
         {
-            services.TryAddSingleton<IGrainStorage>(sp => sp.GetKeyedService<MultitenantStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
-            services.TryAddSingleton(sp => sp.GetKeyedService<ITenantGrainStorageFactory>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
+            services.TryAddSingleton<IGrainStorage>(sp => sp.GetRequiredKeyedService<MultitenantStorage>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
+            services.TryAddSingleton(sp => sp.GetRequiredKeyedService<ITenantGrainStorageFactory>(ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME));
         }
         return services.AddKeyedSingleton(name, (s, _) => MultitenantStorageFactory.Create(s, name))
                        .AddKeyedSingleton<IGrainStorage>(name, (s, n) => s.GetRequiredKeyedService<MultitenantStorage>(n))
