@@ -72,7 +72,7 @@ public class TenantController : ControllerBase
      => id != user.Id ? BadRequest($"url id {id} != user id {user?.Id}") :
         await RequestTenant.UpdateUser(user) switch
         {
-            { IsSuccess: true               } r => Ok(),
+            { IsSuccess: true               }   => Ok(),
             { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
             {                               } r => throw r.UnhandledErrorException()
         };
@@ -85,7 +85,7 @@ public class TenantController : ControllerBase
     public async Task<ActionResult> DeleteUser(Guid id)
      => await RequestTenant.DeleteUser(id) switch
         {
-            { IsSuccess: true               } r => Ok(),
+            { IsSuccess: true               }   => Ok(),
             { ErrorNr: ErrorNr.UserNotFound } r => NotFound(r.ErrorsText),
             {                               } r => throw r.UnhandledErrorException()
         };
