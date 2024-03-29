@@ -45,6 +45,7 @@ public class Result<TValue> : ResultBase<ErrorNr, TValue>
 }
 
 [GenerateSerializer]
+[SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "<Pending>")]
 public abstract class ResultBase<TErrorNr, TValue> : ResultBase<TErrorNr> where TErrorNr : Enum
 {
     [Id(0)] TValue? value;
@@ -82,6 +83,7 @@ public abstract class ResultBase<TErrorNr, TValue> : ResultBase<TErrorNr> where 
 }
 
 [GenerateSerializer]
+[SuppressMessage("Naming", "CA1724:Type names should not match namespaces", Justification = "Changing type name(space) would break Orleans serialization compatibility")]
 public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
 {
     public bool IsSuccess => !IsFailed;
@@ -112,7 +114,7 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
     /// <param name="validationErrorFlag">The enum flag used to identify an error as a validation error</param>
     /// <param name="validationErrors">If the return value is true, receives all errors in a dictionary suitable for serializing into a https://tools.ietf.org/html/rfc7807 based format; otherwise set to null</param>
     /// <returns>True for a failed result that has the <paramref name="validationErrorFlag"/> set in the <typeparamref name="TErrorNr"/> for <b>all</b> errors; false otherwise</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link works independently of global usings")]
+    [SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link works independently of global usings")]
     public bool TryAsValidationErrors(TErrorNr validationErrorFlag, [NotNullWhen(true)] out Dictionary<string, string[]>? validationErrors)
     {
         if (IsFailed && Errors.All(error => error.Nr.HasFlag(validationErrorFlag)))
@@ -136,6 +138,7 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
     public NotImplementedException UnhandledErrorException(string? message = null) => new($"{message}Unhandled error(s): " + ErrorsText);
 
     [GenerateSerializer, Immutable]
+    [SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "Changing type name(space) would break Orleans serialization compatibility")]
     public record Error([property: Id(0)] TErrorNr Nr, [property: Id(1)] string Message = "")
     {
         public static implicit operator Error(TErrorNr nr) => new(nr);
