@@ -35,7 +35,7 @@ public class TenantIdTests
 
     [Theory]
     [MemberData(nameof(TenantKeyQualifiedKeys))]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Avoid code duplication")]
+    [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Avoid code duplication")]
     public void GetTenantIdString_ForGrainWithTenant_ReturnsCorrectTenantId(string tenantId, string keyWithinTenant, string _)
     {
         var grain = GetGrain(tenantId, keyWithinTenant);
@@ -45,7 +45,7 @@ public class TenantIdTests
 
     [Theory]
     [MemberData(nameof(TenantKeyQualifiedKeys))]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Avoid code duplication")]
+    [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "Avoid code duplication")]
     public void GetKeyWithinTenant_ForGrainWithTenant_ReturnsCorrectKeyWithinTenant(string tenantId, string keyWithinTenant, string _)
     {
         var grain = GetGrain(tenantId, keyWithinTenant);
