@@ -107,7 +107,7 @@ sealed class SiloLifecycleSimulator : ISiloLifecycle, IRepeatedSiloLifecycleObse
             if (stopping) return;
             HighestCompletedStage = onStartRecord.HighestCompletedStage;
             LowestStoppedStage = onStartRecord.LowestStoppedStage;
-            await OnStart(onStartRecord.LifecycleIndex, ct);
+            await OnStart(onStartRecord.LifecycleIndex, ct).ConfigureAwait(false);
         }
     }
 
@@ -130,7 +130,7 @@ sealed class SiloLifecycleSimulator : ISiloLifecycle, IRepeatedSiloLifecycleObse
         {
             int stage = subscriptionsForStage.Key;
             logger.ReplayingSiloLifecycleStartForTenant(subscriptionsForStage.Count(), stage);
-            await Task.WhenAll(subscriptionsForStage.Select(s => s.Observer.OnStart(ct)).ToArray());
+            await Task.WhenAll(subscriptionsForStage.Select(s => s.Observer.OnStart(ct)).ToArray()).ConfigureAwait(false);
             HighestCompletedStage = stage;
         }
     }
@@ -148,7 +148,7 @@ sealed class SiloLifecycleSimulator : ISiloLifecycle, IRepeatedSiloLifecycleObse
         {
             int stage = subscriptionsForStage.Key;
             logger.ForwardingSiloLifecycleStopForTenant(subscriptionsForStage.Count(), stage);
-            await Task.WhenAll(subscriptionsForStage.Select(s => s.Observer.OnStop(ct)).ToArray());
+            await Task.WhenAll(subscriptionsForStage.Select(s => s.Observer.OnStop(ct)).ToArray()).ConfigureAwait(false);
         }
     }
 

@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Type is for tool access only", Scope = "type", Target = "~T:Orleans4Multitenant.Apis.TenantApi.TenantController")]
+[assembly: SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Not relevant for ASP.NET Core applications", Scope = "namespaceanddescendants", Target = "~N:Orleans4Multitenant.Apis")]
