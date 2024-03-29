@@ -79,7 +79,7 @@ sealed class MultitenantStorage : IGrainStorage, ILifecycleParticipant<ISiloLife
                         participant.Participate(simulator); // Subscriptions to the simulator are registered here
 
                         logger.StartingTenantProvider(tenantId, options.TenantStorageProviderInitTimeout.TotalSeconds);
-                        var cts = new CancellationTokenSource();
+                        using var cts = new CancellationTokenSource();
                         cts.CancelAfter(options.TenantStorageProviderInitTimeout);
                         await simulator.ReplayOnStartHistory(cts.Token); // Invokes any subscriptions registered on the simulator
                                                                          // Before a storage provider is fully started by Orleans, it is not accessed for grain state
