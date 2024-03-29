@@ -8,7 +8,7 @@ public static class TenantHeader
     public const string Name = "tenant";
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Instantiated late-bound")]
-    internal class AddAsOpenApiParameter : IOperationFilter
+    internal sealed class AddAsOpenApiParameter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
          => (operation.Parameters ??= []).Add(new OpenApiParameter
