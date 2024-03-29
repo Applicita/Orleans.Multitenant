@@ -3,10 +3,8 @@ using Orleans4Multitenant.Contracts.TenantContract;
 
 namespace Orleans4Multitenant.Apis;
 
-public abstract partial class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
+public abstract partial class ControllerBase(IClusterClient orleans) : Microsoft.AspNetCore.Mvc.ControllerBase
 {
-    readonly IClusterClient orleans;
-
     protected ITenant RequestTenant
     {
         get
@@ -15,6 +13,4 @@ public abstract partial class ControllerBase : Microsoft.AspNetCore.Mvc.Controll
             return orleans.ForTenant(tenantId).GetGrain<ITenant>(ITenant.Id);
         }
     }
-
-    public ControllerBase(IClusterClient orleans) => this.orleans = orleans;
 }
