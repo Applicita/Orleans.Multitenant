@@ -8,7 +8,7 @@
     <AnalysisLevel>preview-All</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);ORLEANS0010;CA1812;CA1062;CA1034;IDE0005;xUnit1042</NoWarn>
+    <NoWarn>$(NoWarn);EnableGenerateDocumentationFile</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,15 +7,15 @@ public class UnauthorizedStreamingTests(ClusterFixture fixture)
 {
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
-    public static IEnumerable<object?[]> TenantScenarios() => [
-        //              scenarioId, providerIsTenantAware, streamTenant, producerTenant, subscriberTenant
-        ["1",                  true,    "TenantA",      "TenantA",        "TenantA"],
-        ["2",                  true,    "TenantA",      "TenantA",        "TenantB"],
-        ["3",                  true,    "TenantA",      "TenantB",        "TenantA"],
-        // TODO: fix test scenario ["4",                 false,    "TenantA",      "TenantA",        "TenantA"],
-        ["5",                 false,    "TenantA",      "TenantA",        "TenantB"],
-        ["6",                 false,    "TenantA",      "TenantB",        "TenantA"],
-    ];
+    public static TheoryData<string /*scenarioId*/, bool /*providerIsTenantAware*/, string /*streamTenant*/, string /*producerTenant*/, string /*subscriberTenant*/> TenantScenarios() => new() { 
+        { "1",                  true,    "TenantA",      "TenantA",        "TenantA" },
+        { "2",                  true,    "TenantA",      "TenantA",        "TenantB" },
+        { "3",                  true,    "TenantA",      "TenantB",        "TenantA" },
+        // TODO: fix test scenario 4
+        // { "4",                 false,    "TenantA",      "TenantA",        "TenantA" },
+        { "5",                 false,    "TenantA",      "TenantA",        "TenantB" },
+        { "6",                 false,    "TenantA",      "TenantB",        "TenantA" },
+    };
 
     [Theory]
     [MemberData(nameof(TenantScenarios))]

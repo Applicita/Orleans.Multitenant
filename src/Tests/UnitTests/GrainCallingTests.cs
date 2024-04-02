@@ -5,12 +5,11 @@ namespace OrleansMultitenant.Tests.UnitTests;
 [Collection(MultiPurposeCluster.Name)]
 public class GrainCallingTests(ClusterFixture fixture)
 {
-    public static IEnumerable<object?[]> UnauthorizedTenantScenarios() => [
-        //              scenarioId, sourceTenant, targetTenant
-        ["1",    "TenantA",    "TenantB"],
-        ["2",    "TenantA",         null],
-        ["3",         null,    "TenantB"]
-    ];
+    public static TheoryData<string /*scenarioId*/, string? /*sourceTenant*/, string? /*targetTenant*/> UnauthorizedTenantScenarios() => new () {
+        { "1",    "TenantA",    "TenantB" },
+        { "2",    "TenantA",         null },
+        { "3",         null,    "TenantB" }
+    };
 
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 

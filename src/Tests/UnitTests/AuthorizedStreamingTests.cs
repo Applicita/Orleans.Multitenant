@@ -13,12 +13,11 @@ public class AuthorizedStreamingTests(ClusterFixture fixture)
 
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
-    public static IEnumerable<object?[]> TenantScenarios() => [
-        //              scenarioId,  tenantId, tenantValueOffset, tenantAware
-        ["1",      null,                 0,       false], // Verify that common streaming scenario's work with the (tenant-unaware) built-in Orleans API's
-        ["2", "TenantA",           100_000,        true], // Verify that common streaming scenario's work with a tenant that has a non-empty tenant ID
-        ["3",        "",           200_000,        true], // Verify that common streaming scenario's work with a tenant that has an empty tenant ID
-    ];
+    public static TheoryData<string /*scenarioId*/, string? /*tenantId*/, int /*tenantValueOffset*/, bool /*tenantAware*/> TenantScenarios => new () {
+        { "1",      null,       0, false }, // Verify that common streaming scenario's work with the (tenant-unaware) built-in Orleans API's
+        { "2", "TenantA", 100_000,  true }, // Verify that common streaming scenario's work with a tenant that has a non-empty tenant ID
+        { "3",        "", 200_000,  true }, // Verify that common streaming scenario's work with a tenant that has an empty tenant ID
+    };
 
     [Theory]
     [MemberData(nameof(TenantScenarios))]

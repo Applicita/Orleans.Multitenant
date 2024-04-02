@@ -7,7 +7,7 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AnalysisLevel>preview-All</AnalysisLevel>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <NoWarn>$(NoWarn);1591;ORLEANS0010;CA2225</NoWarn>
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
     
     <PropertyGroup>

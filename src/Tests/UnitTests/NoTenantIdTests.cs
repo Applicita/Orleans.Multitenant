@@ -7,18 +7,18 @@ public class NoTenantIdTests(ClusterFixture fixture)
 {
     readonly Orleans.TestingHost.TestCluster cluster = fixture.Cluster;
 
-    public static IEnumerable<object?[]> KeyQualifiedKeys() => [
-        [""      , ""],
-        ["1"     , "1"],
-        ["Key2"  , "Key2"],
-        ["|"     , "||"],
-        ["||"    , "||||"],
-        ["|Key3" , "||Key3"],
-        ["K|ey4" , "K||ey4"],
-        ["Key5|" , "Key5||"],
-        ["~Key6" , "~Key6"],
-        ["|~Key7", "||~Key7"]
-    ];
+    public static TheoryData<string /*key*/, string /*tenantQualifiedKey*/> KeyQualifiedKeys() => new() {
+        { ""      , ""        },
+        { "1"     , "1"       },
+        { "Key2"  , "Key2"    },
+        { "|"     , "||"      },
+        { "||"    , "||||"    },
+        { "|Key3" , "||Key3"  },
+        { "K|ey4" , "K||ey4"  },
+        { "Key5|" , "Key5||"  },
+        { "~Key6" , "~Key6"   },
+        { "|~Key7", "||~Key7" }
+    };
 
     [Theory]
     [MemberData(nameof(KeyQualifiedKeys))]

@@ -1,4 +1,4 @@
-# Version 20221025
+# Version 20240401
 # This file does not inherit .editorconfig settings from higher directories - where possible, place it at the root of the repository
 
 # References:
@@ -23,15 +23,15 @@ indent_size = 4
 insert_final_newline = true
 charset = utf-8-bom
 
+# Note that choices to deviate from the default are governed by these goals:
+# 1) Remove noise
+# 2) Increase conciseness
+
 ###############################################################
 # Different from VS2022 .NET .editorconfig template defaults  #
 # Defaults are left in their original location, commented out #
 # with comment prefix "# Default: <original>"                 #
 ###############################################################
-
-# Note that choices to deviate from the default are governed by these goals:
-# 1) Remove noise
-# 2) Increase conciseness
 
 dotnet_style_qualification_for_field = false:warning
 dotnet_style_qualification_for_property = false:warning
@@ -115,6 +115,19 @@ dotnet_naming_rule.private_fields_notunderscored.symbols = private_fields
 dotnet_naming_rule.private_fields_notunderscored.style = notunderscored
 dotnet_naming_rule.private_fields_notunderscored.severity = error
 # End of No underscore prefix on private fields
+
+###############################################################
+# Different from analyzer defaults                            #
+###############################################################
+
+dotnet_diagnostic.CA1034.severity = suggestion
+    # changed from warning because using namespaces as alternative to nested types for logical grouping or for avoiding name collisions, 
+    # as the rule states, either adds noise (repeated local namespace usings) or does not prevent collisions (global namespace usings)
+    # see https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/CA1034
+
+dotnet_diagnostic.CA1812.severity = suggestion # changed from warning because too many false positives where external libraries create instances (e.g. DI)
+dotnet_diagnostic.CA2225.severity = none # is not relevant because we do not design binary API's for other languages than C#. See https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2225
+dotnet_diagnostic.ORLEANS0010.severity = none # adding an alias to every grain contract type and member adds too much noise. This rule should be triggered only during refactoring
 
 ###############################
 # .NET Coding Conventions     #
@@ -210,7 +223,7 @@ csharp_new_line_between_query_expression_clauses = true
 # Indentation preferences
 csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
-csharp_indent_labels = flush_left
+csharp_indent_labels = one_less_than_current
 # Space preferences
 csharp_space_after_cast = false
 csharp_space_after_keywords_in_control_flow_statements = true
@@ -252,6 +265,23 @@ csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
 csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true:silent
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:silent
 csharp_style_prefer_parameter_null_checking = true:suggestion
+csharp_using_directive_placement = outside_namespace:warning
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_prefer_method_group_conversion = true:warning
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_expression_bodied_lambdas = true:warning
+csharp_style_expression_bodied_local_functions = false:warning
+csharp_style_prefer_null_check_over_type_check = true:warning
+csharp_prefer_simple_default_expression = true:warning
+csharp_style_prefer_local_over_anonymous_function = true:warning
+csharp_style_prefer_index_operator = true:warning
+csharp_style_prefer_range_operator = true:warning
+csharp_style_implicit_object_creation_when_type_is_apparent = true:warning
+csharp_style_prefer_tuple_swap = true:warning
+csharp_style_prefer_utf8_string_literals = true:suggestion
+csharp_style_inlined_variable_declaration = true:warning
+csharp_style_deconstructed_variable_declaration = true:warning
+csharp_style_unused_value_assignment_preference = discard_variable:warning
 ###############################
 # VB Coding Conventions       #
 ###############################
@@ -344,3 +374,4 @@ dotnet_remove_unnecessary_suppression_exclusions = none
 dotnet_separate_import_directive_groups = false
 
 dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion

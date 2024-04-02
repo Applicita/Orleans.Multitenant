@@ -8,7 +8,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>b883d5d6-32c5-4426-934b-b68c47fc7691</UserSecretsId>
-    <NoWarn>$(NoWarn);ORLEANS0010;IDE0005</NoWarn>
+    <NoWarn>$(NoWarn);EnableGenerateDocumentationFile</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
