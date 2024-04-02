@@ -67,7 +67,7 @@ public class TenantController(IClusterClient orleans) : ControllerBase(orleans)
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateUser(Guid id, User user)
-     => id != user.Id ? BadRequest($"url id {id} != user id {user?.Id}") :
+     => !(id == user?.Id) ? BadRequest($"url id {id} != user id {user?.Id}") :
         await RequestTenant.UpdateUser(user) switch
         {
             { IsSuccess: true               }   => Ok(),
