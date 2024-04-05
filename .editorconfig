@@ -1,5 +1,16 @@
-﻿# Version 20240405
+﻿# Version 20240405 - C# 12
+# Origin: see https://github.com/Applicita/Modern.CSharp.Templates/blob/main/Editorconfig.md
+
 # This file does not inherit .editorconfig settings from higher directories - where possible, place it at the root of the repository
+
+# It is recommended to include below settings are in all .csproj files that are in or below the folder that contains this .editorconfig file:
+#  <PropertyGroup>
+#    <Nullable>enable</Nullable>
+#    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+#    <AnalysisLevel>preview-All</AnalysisLevel>
+#    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+#  </PropertyGroup>
+# Note that for .NET 8 the above AnalysisLevel setting is necessary for command-line builds to respect the severity settings in this .editorconfig. In .NET 9+ these are always respected.
 
 # References:
 # - To learn more about .editorconfig see https://aka.ms/editorconfigdocs
@@ -19,7 +30,7 @@ root = true
 charset = utf-8-bom # Default: not specified
 indent_style = space
 end_of_line = lf # Default: crlf. Line endings are different from Visual Studio for Windows .editorconfig template defaults; see comments in EOL.gitattributes for rationale
-# Note that on save VS 2022 17.9.5 adds some keys in this section that are already specified in the [*.cs] section (with the same values) - see https://github.com/dotnet/roslyn/issues/59325. 
+# Note that on save VS 2022 17.9.5 adds some keys in this section that are also specified in the [*.cs] section (with the same values) - see https://github.com/dotnet/roslyn/issues/59325
 # These duplicate key-values dont hurt but they can be removed from this section
 
 # C# project files
@@ -303,4 +314,6 @@ dotnet_diagnostic.IDE0072.severity = suggestion
     # while truly unexpected returns should throw an exception. Since switch automatically throws a SwitchExpressionException, 
     # it is valid to not explicitly code cases that throw an exception to indicate the return is truly unexpected.
 dotnet_diagnostic.IDE0130.severity = suggestion # IDE0130 "Namespace does not match folder structure" can be deviated from to prevent overstructuring
+
+# Solution-specific settings
 dotnet_diagnostic.ORLEANS0010.severity = none # adding an alias to every grain contract type and member adds too much noise. This rule should be triggered only during refactoring
