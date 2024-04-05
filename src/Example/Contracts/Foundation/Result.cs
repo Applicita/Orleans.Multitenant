@@ -115,7 +115,7 @@ public abstract class ResultBase<TErrorNr> where TErrorNr : Enum
     /// <param name="validationErrorFlag">The enum flag used to identify an error as a validation error</param>
     /// <param name="validationErrors">If the return value is true, receives all errors in a dictionary suitable for serializing into a https://tools.ietf.org/html/rfc7807 based format; otherwise set to null</param>
     /// <returns>True for a failed result that has the <paramref name="validationErrorFlag"/> set in the <typeparamref name="TErrorNr"/> for <b>all</b> errors; false otherwise</returns>
-    //[SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link works independently of global usings")]
+    [SuppressMessage("Style", "IDE0001:Simplify Names", Justification = "Full name is necessary to ensure link in inline documentation works independently of global usings")]
     public bool TryAsValidationErrors(TErrorNr validationErrorFlag, [NotNullWhen(true)] out Dictionary<string, string[]>? validationErrors)
     {
         if (IsFailed && Errors.All(error => error.Nr.HasFlag(validationErrorFlag)))
