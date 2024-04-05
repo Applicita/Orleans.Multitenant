@@ -1,4 +1,4 @@
-﻿# Version 20240404
+﻿# Version 20240405
 # This file does not inherit .editorconfig settings from higher directories - where possible, place it at the root of the repository
 
 # References:
@@ -19,11 +19,13 @@ root = true
 charset = utf-8-bom # Default: not specified
 indent_style = space
 end_of_line = lf # Default: crlf. Line endings are different from Visual Studio for Windows .editorconfig template defaults; see comments in EOL.gitattributes for rationale
-
-# Note on save VS 2022 17.9.5 adds some keys in this section that are already specified in the [*.cs] section (with the same values). 
+# Note that on save VS 2022 17.9.5 adds some keys in this section that are already specified in the [*.cs] section (with the same values) - see https://github.com/dotnet/roslyn/issues/59325. 
 # These duplicate key-values dont hurt but they can be removed from this section
 
+# C# project files
 [*.csproj]
+
+# Indentation and spacing
 indent_size = 2
 tab_width = 2
 
@@ -57,24 +59,24 @@ dotnet_style_predefined_type_for_locals_parameters_members = true:warning # Defa
 dotnet_style_predefined_type_for_member_access = true:warning # Default: true
 
 # Parentheses preferences
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
 
 # Modifier preferences
 dotnet_style_require_accessibility_modifiers = omit_if_default:warning # Default: for_non_interface_members
 
 # Expression-level preferences
-dotnet_style_coalesce_expression = true
-dotnet_style_collection_initializer = true
-dotnet_style_explicit_tuple_names = true
+dotnet_style_coalesce_expression = true:warning # Default: true:suggestion
+dotnet_style_collection_initializer = true:warning # Default: true:suggestion
+dotnet_style_explicit_tuple_names = true:warning # Default: true:suggestion
 dotnet_style_namespace_match_folder = false:silent # Default: true - can be deviated from to prevent overstructuring
-dotnet_style_null_propagation = true
-dotnet_style_object_initializer = true
+dotnet_style_null_propagation = true:warning # Default: true:suggestion
+dotnet_style_object_initializer = true:warning # Default: true:suggestion
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_auto_properties = true:warning # Default: true
-dotnet_style_prefer_collection_expression = when_types_loosely_match
+dotnet_style_prefer_collection_expression = when_types_loosely_match:warning # Default: when_types_loosely_match:suggestion
 dotnet_style_prefer_compound_assignment = true:warning # Default: true
 dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion # Default: true
 dotnet_style_prefer_conditional_expression_over_return = true:suggestion # Default: true
@@ -95,8 +97,8 @@ dotnet_code_quality_unused_parameters = all:warning # Default: all
 dotnet_remove_unnecessary_suppression_exclusions = none
 
 # New line preferences
-dotnet_style_allow_multiple_blank_lines_experimental = true
-dotnet_style_allow_statement_immediately_after_block_experimental = true
+dotnet_style_allow_multiple_blank_lines_experimental = true:silent
+dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
 
 #### C# Coding Conventions ####
 
@@ -116,28 +118,28 @@ csharp_style_expression_bodied_operators = true:warning # Default: false:silent
 csharp_style_expression_bodied_properties = true:warning # Default: true:silent
 
 # Pattern matching preferences
-csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
-csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:warning # Default: true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning # Default: true:suggestion
 csharp_style_prefer_extended_property_pattern = true:warning # Default: true
 csharp_style_prefer_not_pattern = true:warning # Default: true:suggestion
 csharp_style_prefer_pattern_matching = true:warning # Default: true:silent
 csharp_style_prefer_switch_expression = true:warning # Default: true:suggestion
 
 # Null-checking preferences
-csharp_style_conditional_delegate_call = true:suggestion
+csharp_style_conditional_delegate_call = true:warning # Default: true:suggestion
 
 # Modifier preferences
 csharp_prefer_static_local_function = true:warning # Default: true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async
 csharp_style_prefer_readonly_struct = true:warning # Default: true:suggestion
-csharp_style_prefer_readonly_struct_member = true:suggestion
+csharp_style_prefer_readonly_struct_member = true:warning # Default: true:suggestion
 
 # Code-block preferences
 csharp_prefer_braces = when_multiline:warning # Default: true:silent
-csharp_prefer_simple_using_statement = true:suggestion
+csharp_prefer_simple_using_statement = true:warning # Default: true:suggestion
 csharp_style_namespace_declarations = file_scoped:warning # Default: block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:warning # Default: true:silent
-csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_primary_constructors = true:warning # Default: true:suggestion
 csharp_style_prefer_top_level_statements = true:silent
 
 # Expression-level preferences
@@ -151,7 +153,7 @@ csharp_style_prefer_null_check_over_type_check = true:warning # Default: true:su
 csharp_style_prefer_range_operator = true:warning # Default: true:suggestion
 csharp_style_prefer_tuple_swap = true:warning # Default: true:suggestion
 csharp_style_prefer_utf8_string_literals = true:suggestion
-csharp_style_throw_expression = true:suggestion
+csharp_style_throw_expression = true:warning # Default: true:suggestion
 csharp_style_unused_value_assignment_preference = discard_variable:warning # Default: discard_variable:suggestion
 csharp_style_unused_value_expression_statement_preference = discard_variable:warning # Default: discard_variable:silent
 
@@ -261,10 +263,9 @@ dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 # Use PascalCase for constant fields (as per https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
-dotnet_naming_style.pascal_case_style.capitalization              = pascal_case
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = warning
 dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols  = constant_fields
-dotnet_naming_rule.constant_fields_should_be_pascal_case.style    = pascal_case_style
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case
 dotnet_naming_symbols.constant_fields.applicable_kinds            = field
 dotnet_naming_symbols.constant_fields.applicable_accessibilities  = *
 dotnet_naming_symbols.constant_fields.required_modifiers          = const
