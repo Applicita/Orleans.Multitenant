@@ -13,7 +13,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <PackageId>Orleans.Multitenant</PackageId>
-        <PackageVersion>2.0.0-preview.1</PackageVersion>
+        <PackageVersion>2.0.0</PackageVersion>
         <Title>Orleans Multitenant</Title>
         <Description>Secure, flexible tenant separation for Microsoft Orleans 8</Description>
         <Authors>VincentH.NET;Applicita</Authors>
