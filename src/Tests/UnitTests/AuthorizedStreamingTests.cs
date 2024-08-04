@@ -1,5 +1,4 @@
-﻿using Orleans.Runtime;
-using Orleans.Streams;
+﻿using Orleans.Streams;
 using OrleansMultitenant.Tests.Examples.AuthorizedStreaming;
 
 namespace OrleansMultitenant.Tests.UnitTests;

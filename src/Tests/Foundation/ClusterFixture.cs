@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
 using Orleans.Configuration;
-using Orleans.Hosting;
 using Orleans.Providers;
 using Orleans.Storage;
 using Orleans.TestingHost;
