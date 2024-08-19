@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Orleans.Runtime;
 using static Orleans.Multitenant.Internal.LoggingParameter;
 using Event = Orleans.Multitenant.Internal.LoggingEvent;
 

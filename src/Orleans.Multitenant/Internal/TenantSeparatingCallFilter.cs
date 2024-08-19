@@ -1,6 +1,4 @@
-﻿using Orleans.Runtime;
-
-namespace Orleans.Multitenant.Internal;
+﻿namespace Orleans.Multitenant.Internal;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class TenantSeparatingCallFilter(IGrainCallTenantSeparator separator, ICrossTenantAuthorizer authorizer) : IIncomingGrainCallFilter

@@ -1,7 +1,4 @@
-﻿using Orleans;
-using Orleans.Runtime;
-
-namespace Orleans4Multitenant.Services.TenantService;
+﻿namespace Orleans4Multitenant.Services.TenantService;
 
 sealed class TenantGrain([PersistentState("state")] IPersistentState<TenantGrain.State> state) : GrainBase<TenantGrain.State>(state), ITenant
 {

@@ -15,7 +15,7 @@ static class TenantGrainStorageFactoryFactory
             ActivatorUtilities.CreateInstance<TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>>(services, name, configureTenantOptions);
 }
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class TenantGrainStorageFactory<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator> : ITenantGrainStorageFactory
     where TGrainStorage : IGrainStorage
     where TGrainStorageOptions : class, new()

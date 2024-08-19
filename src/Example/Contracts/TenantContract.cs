@@ -1,5 +1,4 @@
-﻿using Orleans;
-namespace Orleans4Multitenant.Contracts.TenantContract;
+﻿namespace Orleans4Multitenant.Contracts.TenantContract;
 
 [GenerateSerializer, Immutable]
 public record Tenant([property: Id(0)] string Name);

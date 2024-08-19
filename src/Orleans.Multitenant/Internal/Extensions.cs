@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Orleans.Configuration;
 using Orleans.Providers;
-using Orleans.Runtime;
 using Orleans.Storage;
 
 namespace Orleans.Multitenant.Internal;

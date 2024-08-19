@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using Microsoft.Extensions.Logging;
-using Orleans.Runtime;
 
 namespace Orleans.Multitenant.Internal;
 
