@@ -1,7 +1,4 @@
-﻿using Orleans;
-using Orleans.Runtime;
-
-namespace Orleans4Multitenant.Services.TenantService;
+﻿namespace Orleans4Multitenant.Services.TenantService;
 
 // All public grain contracts for all services must be in the Contracts assembly, using a separate subnamespace for each service
 
