@@ -1,4 +1,4 @@
-# <img src="img/CSharp-Toolkit-Icon.png" alt="Backend Toolkit" width="64px" />Orleans.Multitenant
+﻿# <img src="img/CSharp-Toolkit-Icon.png" alt="Backend Toolkit" width="64px" />Orleans.Multitenant
 Secure, flexible tenant separation for Microsoft Orleans 8
 
 > [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/Orleans.Multitenant?color=gold&label=NuGet:%20Orleans.Multitenant&style=plastic)](https://www.nuget.org/packages/Orleans.Multitenant)<br />
@@ -48,6 +48,26 @@ siloBuilder
         // just before it is instantiated
  )
 ```
+
+#### Customize storage provider constructor parameters
+By default, the parameters passed into the storage provider instance for a tenant are the tenant provider name (which contains the tenant Id) and the tenant options. Some storage providers may expect a different (wrapper) type for the options, or you may want to pass in additional parameters (e.g. `ClusterOptions`).
+
+To do this, you can pass in an optional `GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters` parameter.
+
+E.g. the Orleans ADO.NET storage provider constructor expects an `IOptions<AdoNetGrainStorageOptions>` instead of an `AdoNetGrainStorageOptions`. You can use `getProviderParameters` to wrap the `AdoNetGrainStorageOptions` in an `IOptions<AdoNetGrainStorageOptions>`:
+
+```csharp
+.AddMultitenantGrainStorageAsDefault<AdoNetGrainStorage, AdoNetGrainStorageOptions, AdoNetGrainStorageOptionsValidator>(
+    (silo, name) => silo.AddAdoNetGrainStorage(name, options => options.ConnectionString = sqlConnectionString),
+
+    configureTenantOptions: (options, tenantId) => options.ConnectionString = sqlConnectionString.Replace("[DatabaseName]", tenantId, StringComparison.Ordinal),
+
+    getProviderParameters: (services, providerName, tenantProviderName, options) => [Options.Create(options)]
+)
+```
+Note that you do not need to include the `tenantProviderName` in the returned provider parameters; it is added automatically.
+
+The parameters passed to `getProviderParameters` allow to access relevant services from DI to retrieve additional provider parameters, if needed.
 
 ### Add multitenant streams
 To configure a silo to use a specific stream provider type as a named stream provider with tenant separation, use `AddMultitenantStreams`. Any Orleans stream provider can be used:

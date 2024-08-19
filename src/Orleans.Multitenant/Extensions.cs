@@ -39,12 +39,14 @@ public static class SiloBuilderExtensions
     /// This storage provider instance will not be used to store state - it is only called at silo initialization, to ensure that any shared dependencies needed by the tenant-specific storage provider instances are initialized
     /// </param>
     /// <param name="configureTenantOptions">Action to configure the supplied <typeparamref name="TGrainStorageOptions"/> based on the supplied tenant ID (e.g. use the tenant ID in a storage table name to realize separate storage per tenant)</param>
+    /// <param name="getProviderParameters">Optional factory to transform or add constructor parameters for tenant grain storage providers; for details see <see cref="GrainStorageProviderParametersFactory{TGrainStorageOptions}"/><br />When omitted, only <typeparamref name="TGrainStorageOptions"/> is passed in</param>
     /// <param name="configureOptions">Action to configure the <see cref="MultitenantStorageOptions"/></param>
     /// <returns>The same instance of the <see cref="ISiloBuilder"/> for chaining</returns>
     public static ISiloBuilder AddMultitenantGrainStorageAsDefault<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(
         this ISiloBuilder builder,
         Func<ISiloBuilder, string, ISiloBuilder> addStorageProvider,
         Action<TGrainStorageOptions, string>? configureTenantOptions = null,
+        GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters = null,
         Action<OptionsBuilder<MultitenantStorageOptions>>? configureOptions = null)
         where TGrainStorage : IGrainStorage
         where TGrainStorageOptions : class, new()
@@ -53,6 +55,7 @@ public static class SiloBuilderExtensions
         ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME,
         (services, name) => { _ = addStorageProvider(builder, name); return services; },
         configureTenantOptions,
+        getProviderParameters,
         configureOptions);
 
     /// <summary>
@@ -70,6 +73,7 @@ public static class SiloBuilderExtensions
     /// This storage provider instance will not be used to store state - it is only called at silo initialization, to ensure that any shared dependencies needed by the tenant-specific storage provider instances are initialized
     /// </param>
     /// <param name="configureTenantOptions">Action to configure the supplied <typeparamref name="TGrainStorageOptions"/> based on the supplied tenant ID (e.g. use the tenant ID in a storage table name to realize separate storage per tenant)</param>
+    /// <param name="getProviderParameters">Optional factory to transform or add constructor parameters for tenant grain storage providers; for details see <see cref="GrainStorageProviderParametersFactory{TGrainStorageOptions}"/><br />When omitted, only <typeparamref name="TGrainStorageOptions"/> is passed in</param>
     /// <param name="configureOptions">Action to configure the <see cref="MultitenantStorageOptions"/></param>
     /// <returns>The same instance of the <see cref="ISiloBuilder"/> for chaining</returns>
     public static ISiloBuilder AddMultitenantGrainStorage<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(
@@ -77,6 +81,7 @@ public static class SiloBuilderExtensions
         string name,
         Func<ISiloBuilder, string, ISiloBuilder> addStorageProvider,
         Action<TGrainStorageOptions, string>? configureTenantOptions = null,
+        GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters = null,
         Action<OptionsBuilder<MultitenantStorageOptions>>? configureOptions = null)
         where TGrainStorage : IGrainStorage
         where TGrainStorageOptions : class, new()
@@ -85,6 +90,7 @@ public static class SiloBuilderExtensions
         name,
         (sevices, name) => { _ = addStorageProvider(builder, name); return sevices; },
         configureTenantOptions,
+        getProviderParameters,
         configureOptions));
 
     /// <summary>Configure silo to use a specific stream provider type as a named stream provider, with tenant separation</summary>
@@ -121,12 +127,14 @@ public static class ServiceCollectionExtensions
     /// This storage provider instance will not be used to store state - it is only called at silo initialization, to ensure that any shared dependencies needed by the tenant-specific storage provider instances are initialized
     /// </param>
     /// <param name="configureTenantOptions">Action to configure the supplied <typeparamref name="TGrainStorageOptions"/> based on the supplied tenant ID (e.g. use the tenant ID in a storage table name to realize separate storage per tenant)</param>
+    /// <param name="getProviderParameters">Optional factory to transform or add constructor parameters for tenant grain storage providers; for details see <see cref="GrainStorageProviderParametersFactory{TGrainStorageOptions}"/><br />When omitted, only <typeparamref name="TGrainStorageOptions"/> is passed in</param>
     /// <param name="configureOptions">Action to configure the <see cref="MultitenantStorageOptions"/></param>
     /// <returns>The same instance of the <see cref="IServiceCollection"/> for chaining</returns>
     public static IServiceCollection AddMultitenantGrainStorageAsDefault<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(
         this IServiceCollection services,
         Func<IServiceCollection, string, IServiceCollection> addStorageProvider,
         Action<TGrainStorageOptions, string>? configureTenantOptions = null,
+        GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters = null,
         Action<OptionsBuilder<MultitenantStorageOptions>>? configureOptions = null)
         where TGrainStorage : IGrainStorage
         where TGrainStorageOptions : class, new()
@@ -135,6 +143,7 @@ public static class ServiceCollectionExtensions
         ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME,
         addStorageProvider,
         configureTenantOptions,
+        getProviderParameters,
         configureOptions);
 
     /// <summary>
@@ -152,6 +161,7 @@ public static class ServiceCollectionExtensions
     /// This storage provider instance will not be used to store state - it is only called at silo initialization, to ensure that any shared dependencies needed by the tenant-specific storage provider instances are initialized
     /// </param>
     /// <param name="configureTenantOptions">Action to configure the supplied <typeparamref name="TGrainStorageOptions"/> based on the supplied tenant ID (e.g. use the tenant ID in a storage table name to realize separate storage per tenant)</param>
+    /// <param name="getProviderParameters">Optional factory to transform or add constructor parameters for tenant grain storage providers; for details see <see cref="GrainStorageProviderParametersFactory{TGrainStorageOptions}"/><br />When omitted, only <typeparamref name="TGrainStorageOptions"/> is passed in</param>
     /// <param name="configureOptions">Action to configure the <see cref="MultitenantStorageOptions"/></param>
     /// <returns>The same instance of the <see cref="IServiceCollection"/> for chaining</returns>
     public static IServiceCollection AddMultitenantGrainStorage<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(
@@ -159,6 +169,7 @@ public static class ServiceCollectionExtensions
         string name,
         Func<IServiceCollection, string, IServiceCollection> addStorageProvider,
         Action<TGrainStorageOptions, string>? configureTenantOptions = null,
+        GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters = null,
         Action<OptionsBuilder<MultitenantStorageOptions>>? configureOptions = null)
         where TGrainStorage : IGrainStorage
         where TGrainStorageOptions : class, new()
@@ -167,10 +178,28 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(addStorageProvider);
         return addStorageProvider(services, name).AddMultitenantGrainStorage(
                 name,
-                (services, name) => TenantGrainStorageFactoryFactory.Create<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(services, name, configureTenantOptions),
+                (services, name) => TenantGrainStorageFactoryFactory.Create<TGrainStorage, TGrainStorageOptions, TGrainStorageOptionsValidator>(services, name, configureTenantOptions, getProviderParameters),
                 configureOptions);
     }
 }
+
+/// <summary>
+/// Factory delegate, used to create parameters for a tenant grain storage provider constructor.<br /> 
+/// Allows to e.g. transform the options if the provider expects a different type than <typeparamref name="TGrainStorageOptions"/>,<br />
+/// or to retrieve an add extra parameters like <see cref="Configuration.ClusterOptions" />
+/// </summary>
+/// <typeparam name="TGrainStorageOptions">The provider-specific grain storage options type, e.g. Orleans.Storage.MemoryGrainStorageOptions or Orleans.Storage.AzureTableStorageOptions</typeparam>
+/// <param name="services">The silo services</param>
+/// <param name="providerName">The name - without the tenant id - of the provider; can be used to access named provider services that are not tenant specific</param>
+/// <param name="tenantProviderName">The name - including the tenant id - of the tenant provider; can be used to access named provider services that are tenant specific</param>
+/// <param name="options">The options to pass to the provider. Note that configureTenantOptions and options validation have already been executed on this</param>
+/// <returns>The tenant storage provider construction parameters to pass to DI. Don't include <paramref name="tenantProviderName"/> in these; it is added automatically</returns>
+public delegate object[] GrainStorageProviderParametersFactory<in TGrainStorageOptions>(
+    IServiceProvider services,
+    string providerName,
+    string tenantProviderName,
+    TGrainStorageOptions options
+);
 
 public static class GrainExtensions
 {

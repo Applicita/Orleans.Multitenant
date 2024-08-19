@@ -1,6 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
-using Azure.Data.Tables;
+﻿using Azure.Data.Tables;
 using Orleans.Configuration;
+using Microsoft.OpenApi.Models;
 using Orleans.Multitenant;
 using Orleans.Storage;
 using Orleans4Multitenant.Apis;
@@ -12,19 +12,19 @@ builder.Host.UseOrleans((_, silo) => silo
     .UseLocalhostClustering()
     .AddMultitenantCommunicationSeparation()
     .AddMultitenantGrainStorageAsDefault<AzureTableGrainStorage, AzureTableStorageOptions, AzureTableGrainStorageOptionsValidator>(
-            (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
-                options.TableServiceClient = new TableServiceClient(tableStorageConnectionString)),
-            // Called during silo startup, to ensure that any common dependencies
-            // needed for tenant-specific provider instances are initialized
+        (silo, name) => silo.AddAzureTableGrainStorage(name, options =>
+            options.TableServiceClient = new TableServiceClient(tableStorageConnectionString)),
+        // Called during silo startup, to ensure that any common dependencies
+        // needed for tenant-specific provider instances are initialized
 
-            configureTenantOptions: (options, tenantId) =>
-            {
-                options.TableServiceClient = new TableServiceClient(tableStorageConnectionString);
-                options.TableName = $"OrleansGrainState{tenantId}";
-            }   // Called on the first grain state access for a tenant in a silo,
-                // to initialize the options for the tenant-specific provider instance
-                // just before it is instantiated
-        )
+        configureTenantOptions: (options, tenantId) =>
+        {
+            options.TableServiceClient = new TableServiceClient(tableStorageConnectionString);
+            options.TableName = $"OrleansGrainState{tenantId}";
+        }   // Called on the first grain state access for a tenant in a silo,
+            // to initialize the options for the tenant-specific provider instance
+            // just before it is instantiated
+    )
 );
 
 // Add services to the container.
