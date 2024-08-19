@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Orleans.Multitenant.Internal;
 using Orleans.Providers;
+using Orleans.Runtime;
 using Orleans.Storage;
 
 namespace Orleans.Multitenant;

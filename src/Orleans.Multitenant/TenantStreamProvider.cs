@@ -1,4 +1,5 @@
 ﻿using Orleans.Multitenant.Internal;
+using Orleans.Runtime;
 using Orleans.Streams;
 
 namespace Orleans.Multitenant;

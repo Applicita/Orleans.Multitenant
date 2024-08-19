@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using Orleans.Runtime;
 using Orleans.Streams.Filtering;
 
 namespace Orleans.Multitenant.Internal;
 
 interface ITenantEvent { }
 
-[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Class is instantiated through DI")]
 sealed class TenantSeparatingStreamFilter : IStreamFilter
 {
     readonly ILogger logger;
