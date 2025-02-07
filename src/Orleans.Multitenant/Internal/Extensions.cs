@@ -15,7 +15,8 @@ static class SiloBuilderExtensions
     internal static IServiceCollection AddMultitenantGrainStorage(
         this IServiceCollection services, string name, Func<IServiceProvider, string, ITenantGrainStorageFactory> factory, Action<OptionsBuilder<MultitenantStorageOptions>>? configureOptions = null)
     {
-        configureOptions?.Invoke(services.AddOptions<MultitenantStorageOptions>(name));
+        var optionsBuilder = services.AddOptions<MultitenantStorageOptions>(name).BindConfiguration($"{MultitenantStorageOptions.ConfigSectionName}:{name}");
+        configureOptions?.Invoke(optionsBuilder);
 
         _ = services.AddTransient<IConfigurationValidator>(sp => new MultitenantStorageOptionsValidator(sp.GetRequiredService<IOptionsMonitor<MultitenantStorageOptions>>().Get(name), name))
                     .ConfigureNamedOptionForLogging<MultitenantStorageOptions>(name);

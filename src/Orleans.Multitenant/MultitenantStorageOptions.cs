@@ -2,6 +2,8 @@
 
 public sealed class MultitenantStorageOptions
 {
+    public const string ConfigSectionName = "MultitenantStorage";
+
     /// <summary>
     /// Must be in the range [<inheritdoc cref="MinimumTenantStorageProviderInitTimeoutInSeconds" path="//value"/>..<inheritdoc cref="MaximumTenantStorageProviderInitTimeoutInSeconds" path="//value"/>] seconds<br />
     /// Default value is <inheritdoc cref="DefaultTenantStorageProviderInitTimeoutInSeconds" path="//value"/> seconds
