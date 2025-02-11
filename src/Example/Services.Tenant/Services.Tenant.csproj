@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="8.2.0" />
-    <PackageReference Include="Orleans.Multitenant" Version="2.2.8" />
+    <PackageReference Include="Orleans.Multitenant" Version="2.2.12" />
   </ItemGroup>
 
   <ItemGroup>

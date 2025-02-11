@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="8.2.0" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="8.2.0" />
-    <PackageReference Include="Orleans.Multitenant" Version="2.2.8" />
+    <PackageReference Include="Orleans.Multitenant" Version="2.2.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
   </ItemGroup>
