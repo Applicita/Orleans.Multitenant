@@ -54,6 +54,50 @@ By default, the parameters passed into the storage provider instance for a tenan
 
 To do this, you can pass in an optional `GrainStorageProviderParametersFactory<TGrainStorageOptions>? getProviderParameters` parameter.
 
+##### Example: .NET Aspire with Azure Blob Storage for grain state
+If you are using the [.NET Aspire Orleans Integration](https://learn.microsoft.com/en-us/dotnet/aspire/frameworks/orleans) to configure the default grain storage for the silo, you can use the following code to configure the tenant-specific storage provider instances for Azure Blob Storage:
+
+```csharp
+builder.AddKeyedAzureBlobClient("grain-state"); // Use Aspire method to configure the default grain storage for the silo
+
+builder.UseOrleans(
+    silo => silo
+    .AddMultitenantGrainStorageAsDefault<AzureBlobGrainStorage, AzureBlobStorageOptions, AzureBlobStorageOptionsValidator>(
+        // Called during silo startup, to ensure that any common dependencies
+        // needed for tenant-specific provider instances are initialized
+        // Since we called Aspire's AddKeyedAzureBlobClient earlier to configure the default grain storage for the silo,
+        // we don't need to do anything here
+        (silo, name) => silo,
+
+        // Called on the first grain state access for a tenant in a silo,
+        // to initialize the options for the tenant-specific provider instance just before it is instantiated
+        configureTenantOptions: (options, tenantId) =>
+        {
+            #pragma warning disable CA1308 // Normalize strings to uppercase
+            options.ContainerName += "-" + tenantId.ToLowerInvariant();
+            #pragma warning restore CA1308 // Normalize strings to uppercase
+        },
+
+        getProviderParameters: (services, providerName, tenantProviderName, options) => {
+            // Retrieve a new AzureBlobStorageOptions from the same settings that Aspire passed in for 'grain-state':
+            var aspireOptions = services
+                .GetRequiredService<IOptionsMonitor<AzureBlobStorageOptions>>()
+                .Get(providerName);
+
+            aspireOptions.ContainerName = options.ContainerName;
+
+            var containerFactory = options.BuildContainerFactory(services, aspireOptions);
+            
+            return [aspireOptions, containerFactory];
+        }
+    )
+);
+```
+Note that you do not need to include the `tenantProviderName` in the returned provider parameters; it is added automatically.
+
+The parameters passed to `getProviderParameters` allow to access relevant services from DI to retrieve additional provider parameters, if needed.
+
+##### Example: ADO.NET for grain state
 E.g. the Orleans ADO.NET storage provider constructor expects an `IOptions<AdoNetGrainStorageOptions>` instead of an `AdoNetGrainStorageOptions`. You can use `getProviderParameters` to wrap the `AdoNetGrainStorageOptions` in an `IOptions<AdoNetGrainStorageOptions>`:
 
 ```csharp
@@ -65,9 +109,6 @@ E.g. the Orleans ADO.NET storage provider constructor expects an `IOptions<AdoNe
     getProviderParameters: (services, providerName, tenantProviderName, options) => [Options.Create(options)]
 )
 ```
-Note that you do not need to include the `tenantProviderName` in the returned provider parameters; it is added automatically.
-
-The parameters passed to `getProviderParameters` allow to access relevant services from DI to retrieve additional provider parameters, if needed.
 
 ### Add multitenant streams
 To configure a silo to use a specific stream provider type as a named stream provider with tenant separation, use `AddMultitenantStreams`. Any Orleans stream provider can be used:
@@ -170,7 +211,7 @@ Even though the null tenant cannot be specified in the tenant aware API's, it is
 
 To access null tenant grains, use the Orleans built-in `IGrainFactory`, and register an `ICrossTenantAuthorizer` that allows access between the null tenant and other tenants. You can also exclude specific interface namespaces from the need to be authorized by registering an `IGrainCallTenantSeparator` (see [Add multitenant communication separation](#add-multitenant-communication-separation)).
 
-The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
+The `MultitenantStorageOptions.TenantIdForNullTenant` setting specifies the non-null string value representing the null tenant. This value can be specified in `appsettings.json` in the `MultitenantStorage` section, and is passed as the `tenantId` parameter of the `configureTenantOptions` action, which can be specified in `AddMultitenantGrainStorage` methods. This setting allows developers to choose a name for the null tenant in storage that does not conflict with other valid tenant names in the application.
 
 ### Tenant unaware streams
 To access tenant unaware streams (e.g. streams whose keys are defined by 3rd party code), use the Orleans built-in `IStreamProvider`. There is no need for an `ICrossTenantAuthorizer` to enable this access, because an `IStreamProvider` does not have the `TenantSeparatingStreamFilter` attached.
