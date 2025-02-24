@@ -64,39 +64,35 @@ var clusteringTable = storage.AddTables("clustering");
 var grainStorage = storage.AddBlobs("grain-state");
 
 // Add the Orleans resource to the Aspire DistributedApplication
-// builder, then configure it with Azure Table Storage for clustering
-// and Azure Blob Storage for grain storage.
+// builder, then configure it with Azure Table Storage for clustering.
 var orleans = builder.AddOrleans("default")
-                     .WithClustering(clusteringTable)
-                     .WithGrainStorage("Aspire", grainStorage); // We use the "Aspire" provider name for grain storage,
-                                                                // so that it will not interfere with the default grain
-                                                                // storage multitenant provider, which will use the
-                                                                // connectionstring from the Aspire provider.
+                     .WithClustering(clusteringTable);
+// Note that we don't call WithGrainStorage here, since Multitenant grain storage is added in the silo code
+// where we use the blob client that Aspire configures from above grainStorage resource, which is passed to apis using WithReference below
+
+var yourProject = builder
+    .AddProject<Projects. ...>("...")
+    .WithReference(orleans)
+    .WithReference(grainStorage) // We use this instead of .WithGrainStorage(grainStorage) to pass only the blob client to the Orleans silo
+    .WaitFor(clusteringTable)
+    .WaitFor(grainStorage);
 ```
-, then you can use the following code to configure the tenant-specific storage provider instances for Azure Blob Storage:
+then you can use the following code to configure the tenant-specific storage provider instances for Azure Blob Storage:
 
 ```csharp
-// Use Aspire to configure the providers for clustering and grain state
+// Use Aspire to configure the clients for clustering and grain state
 builder.AddKeyedAzureTableClient("clustering");
 builder.AddKeyedAzureBlobClient("grain-state");
-// Note that even though we do not use this blob client, we need to add it to the DI container to avoid an exception
-// when the "Aspire" grain storage provider is initialized from the configuration environment variables that Aspire passes in
 
 builder.UseOrleans(
     silo => silo
     .AddMultitenantGrainStorageAsDefault<AzureBlobGrainStorage, AzureBlobStorageOptions, AzureBlobStorageOptionsValidator>(
         // Called during silo startup, to ensure that any common dependencies
         // needed for tenant-specific provider instances are initialized
-        (silo, name) => silo.AddAzureBlobGrainStorage(name, options =>
-        {
-            // We create a single BlobServiceClient for all tenants, using the connection string from the Aspire configuration
-            string connectionString = builder.Configuration.GetConnectionString("grain-state")
-            ?? throw new InvalidOperationException("The required connection string 'grain-state' is missing in configuration.");
-
-            options.BlobServiceClient = Uri.TryCreate(connectionString, UriKind.Absolute, out var uri)
-                ? new(uri, options.ClientOptions)
-                : new(connectionString, options.ClientOptions);
-        }),
+        (silo, name) => silo.AddAzureBlobGrainStorage(name, (OptionsBuilder<AzureBlobStorageOptions> options) =>
+            options.Configure<IServiceProvider>((options, services) => 
+                options.BlobServiceClient = services.GetRequiredKeyedService<BlobServiceClient>("grain-state")) // Use the BlobServiceClient registered by AddKeyedAzureBlobClient above
+        ),
 
         // Called on the first grain state access for a tenant in a silo,
         // to initialize the options for the tenant-specific provider instance just before it is instantiated
@@ -107,17 +103,10 @@ builder.UseOrleans(
             #pragma warning restore CA1308 // Normalize strings to uppercase
         },
 
-        getProviderParameters: (services, providerName, tenantProviderName, options) => {
-            // Retrieve a new AzureBlobStorageOptions from the settings that Aspire passed in for 'grain-state':
-            var aspireOptions = services
-                .GetRequiredService<IOptionsMonitor<AzureBlobStorageOptions>>()
-                .Get("Aspire"); // The grain storage provider name used in the Aspire configuration
-
-            aspireOptions.ContainerName = options.ContainerName;
-
-            var containerFactory = options.BuildContainerFactory(services, aspireOptions);
-
-            return [aspireOptions, containerFactory];
+        getProviderParameters: (services, providerName, tenantProviderName, options) =>
+        {
+            options.BlobServiceClient = services.GetRequiredKeyedService<BlobServiceClient>("grain-state"); // Use the BlobServiceClient registered by AddKeyedAzureBlobClient above
+            return [options, options.BuildContainerFactory(services, options)];
         }
     )
 );
